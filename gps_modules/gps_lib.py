@@ -7,21 +7,22 @@ fix_type = 0
 longitude_degs = None
 latitude_degs = None
 altitude_meters = None
+velocity_meters = None
 
 stream = serial.Serial('/dev/ttyS0') #configure serial reader
 
 # Returns longitude as float, updates every 1s
-# Returns None if satelite lock lost
+# Returns None if satelite lock lost or on cold start
 def getLongitude():
     return longitude_degs
 
 # Returns latitude as float, updates every 1s
-# Returns None if satelite lock lost
+# Returns None if satelite lock lost or on cold start
 def getLatitude():
     return latitude_degs
 
 # Returns altitude above sea level in meters, updates every 1s
-# Returns None if satelite lock lost
+# Returns None if satelite lock lost or on cold start
 def getAltitude():
     return altitude_meters
 
@@ -32,6 +33,11 @@ def getAltitude():
 def getFixType():
     return int(fix_type)
 
+# Returns velocity of device in meters/second, updates every 1s
+# Returns None if statelite lock lost or on cold start
+def getVelocity():
+    return velocity_meters
+
 #continuously polls for updates to GPS data
 while True:
     NEMA = ''
@@ -40,8 +46,9 @@ while True:
         if char == '$': #$ delimits the start of a NEMA sentence
             break
         NEMA += char
-   if NEMA[0:5] == 'GPGGA': #contains most important info
-        NEMA_tokens = NEMA.split(',')
+    
+    NEMA_tokens = NEMA.split(',')
+    if NEMA[0:5] == 'GPGGA': #contains most important info
         fix_type = NEMA_tokens[6]
         if fix_type == 2: #3D tracking available
             altitude_meters = float(NEMA_tokens[9])
@@ -61,3 +68,10 @@ while True:
         else: #No satelite lock
             latitude_degs = None
             longitude_degs = None
+        
+    if NEMA[0:5] == 'GPRMC': #Contains info on velocity in knots
+        if fix_type != 0:
+            velocity_meters = 0.514444 * float(NEMA_tokens[7])
+        else:
+            velocity_meters = None
+    
