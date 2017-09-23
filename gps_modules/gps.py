@@ -4,7 +4,7 @@ import math
 
 stream = serial.Serial('/dev/ttyS0')
 
-def getGPRMCToken(index):
+def _getGPRMCToken(index):
     while True:
         NEMA = ""
         while stream.read() != '$':
@@ -25,29 +25,44 @@ def getGPRMCToken(index):
     NEMA_tokens = NEMA.split(',')
     return NEMA_tokens[index]
 
+# Returns True if there is a satelite fix
+# Returns False if no satelite lock
 def getFix():
-    return (getGPRMCToken(2) == 'A')
+    return (_getGPRMCToken(2) == 'A')
 
+# Returns longitude as a float
+# Will return None if no satelite lock
 def getLongitude():
     if getFix():
-        token = getGPRMCToken(5)
+        token = _getGPRMCToken(5)
         longitude_degs = int(float(token)) / 100
         longitude_mins = float(token) - (longitude_degs * 100)
         longitude_degs += longitude_mins / 60
-        if getGPRMCToken(6) == 'W':
+        if _getGPRMCToken(6) == 'W':
             longitude_degs *= -1
         return longitude_degs
     else:
         return None
 
+# Returns latitude as a float
+# Will return None if no satelite lock
 def getLatitude():
     if getFix():
-        token = getGPRMCToken(3)
+        token = _getGPRMCToken(3)
         latitude_degs = int(float(token)) / 100
         latitude_mins = float(token) - (latitude_degs * 100)
         latitude_degs += latitude_mins / 60
-        if getGPRMCToken(4) == 'S':
+        if _getGPRMCToken(4) == 'S':
             latitude_degs *= -1
         return latitude_degs
+    else:
+        return None
+
+# Returns velocity in m/s
+# Will return None if no satelite lock
+def getVelocity():
+    if getFix():
+        token = float(_getGPRMCToken(7))
+        return token * 0.514444
     else:
         return None
