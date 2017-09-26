@@ -1,6 +1,17 @@
 import gps
-import requests
+import datetime
+import mysql.connector
+
+cnx = mysql.connector.connect(user='pi', password='sudo', database='test')
+cursor = cnx.cursor()
 
 while True:
-    stringToSend = "Longitude: " + str(gps.getLongitude()) + "| Latitude: " + str(gps.getLatitude()) + "| Velocity: " + str(gps.getVelocity())
-    requests.post("http://localhost:8008",json={"data": stringToSend})
+    stringToSend = ("INSERT INTO gps (time, longitude, latitude, velocity) VALUES (%s, %s, %s, %s)")
+    latitude = str(gps.getLatitude())
+    print latitude
+    longitude = str(gps.getLongitude())
+    print longitude
+    data= (datetime.datetime.now(), longitude, latitude, str(gps.getVelocity()))
+    cursor.execute(stringToSend, data)
+    cnx.commit()
+    print "uploaded"
