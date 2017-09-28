@@ -4,7 +4,7 @@ from hurry.filesize import size
 cnx = mysql.connector.connect(user='pi', password='sudo', database='test')
 
 cursor = cnx.cursor()
-querry = ("SELECT * FROM gps LIMIT 0, 100")
+querry = ("SELECT * FROM gps") #LIMIT 0, 100")
 cursor.execute(querry)
 count = 0
 

@@ -1,4 +1,5 @@
 import random
+import sys
 import numpy as np
 import mysql.connector
 import datetime
@@ -22,13 +23,24 @@ def init_board_gauss(N, k):
 def getDatabaseData():
     cnx = mysql.connector.connect(user='pi', password='sudo', database='test')
     cursor = cnx.cursor()
-    querry = ("SELECT * FROM gps LIMIT 0, 200")
+    querry = ("SELECT * FROM gps") #LIMIT 0, 200")
     cursor.execute(querry)
     x = []
     for (time,longitude,latitude,velocity) in cursor:
         a, b, c = np.array([(time - datetime.datetime(1, 1, 1)).total_seconds() * 10000000, longitude, latitude])
         x.append([a,b,c])
     return np.array(x)
+
+def get2DDatabaseData():
+   cnx = mysql.connector.connect(user='pi', password='sudo', database='test')
+   cursor = cnx.cursor()
+   querry = ("SELECT * FROM gps")
+   cursor.execute(querry)
+   x = []
+   for (time,longitude,latitude,velocity) in cursor:
+       a, b = np.array([longitude,latitude])
+       x.append([a,b])
+   return np.array(x)
         
 def cluster_points(X, mu):
     clusters  = {}
@@ -55,13 +67,28 @@ def find_centers(X, K):
     # Initialize to K random centers
     oldmu = random.sample(X, K)
     mu = random.sample(X, K)
+    clusters = []
     while not has_converged(mu, oldmu):
         oldmu = mu
         # Assign all points in X to clusters
         clusters = cluster_points(X, mu)
         # Reevaluate centers
         mu = reevaluate_centers(oldmu, clusters)
-    print mu
     return(mu, clusters)
-find_centers(getDatabaseData(), 3)
+
+def getDateFromTicks(ticks):
+    return datetime.datetime.min + datetime.timedelta(microseconds = int(ticks)/10)
+
+if (len(sys.argv) < 3):
+    print "usage- AI.py [\"2D\" or \"3D\" [number of clusters]]"
+elif (sys.argv[1] == "2D"):
+    test = find_centers(get2DDatabaseData(), int(sys.argv[2]))
+    for i in range(len(test[0])):
+        print "Latitude: " + str(test[0][i][1]) + " " + "Longitude: " + str(test[0][i][0])
+elif (sys.argv[1] == "3D"):
+    test = find_centers(getDatabaseData(), int(sys.argv[2]))
+    for i in range(len(test[0])):
+        print getDateFromTicks(test[0][i][0])
+else:
+    print "bad"
 
