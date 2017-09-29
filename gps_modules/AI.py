@@ -27,8 +27,8 @@ def getDatabaseData():
     cursor.execute(querry)
     x = []
     for (time,longitude,latitude,velocity) in cursor:
-        a, b, c = np.array([(time - datetime.datetime(1, 1, 1)).total_seconds() * 10000000, longitude, latitude])
-        x.append([a,b,c])
+        a, b, c, d = np.array([(time - datetime.datetime(1, 1, 1)).total_seconds() * 10000000, longitude, latitude, velocity])
+        x.append([a,b,c,d])
     return np.array(x)
 
 def get2DDatabaseData():
@@ -38,8 +38,8 @@ def get2DDatabaseData():
    cursor.execute(querry)
    x = []
    for (time,longitude,latitude,velocity) in cursor:
-       a, b = np.array([longitude,latitude])
-       x.append([a,b])
+       a, b, c = np.array([longitude, latitude, velocity])
+       x.append([a,b,c])
    return np.array(x)
         
 def cluster_points(X, mu):
@@ -84,11 +84,11 @@ if (len(sys.argv) < 3):
 elif (sys.argv[1] == "2D"):
     test = find_centers(get2DDatabaseData(), int(sys.argv[2]))
     for i in range(len(test[0])):
-        print "Latitude: " + str(test[0][i][1]) + " " + "Longitude: " + str(test[0][i][0])
+        print "Latitude: " + str(test[0][i][0]) + " Longitude: " + str(test[0][i][1]) + " Velocity: " + str(test[0][i][2])
 elif (sys.argv[1] == "3D"):
     test = find_centers(getDatabaseData(), int(sys.argv[2]))
     for i in range(len(test[0])):
-        print getDateFromTicks(test[0][i][0])
+        print str(getDateFromTicks(test[0][i][0])) + " | Latitude: " + str(test[0][i][1]) + " Longitude: " + str(test[0][i][2]) + " Velocity: " + str(test[0][i][3])
 else:
     print "bad"
 

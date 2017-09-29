@@ -44,22 +44,24 @@ def getLocation():
     NEMA = _getGPRMC()
     tokens = NEMA.split(',')
     fix = tokens[2] == 'A' # boolean
+    if (fix):
+        longitude_degs = int(float(tokens[5])) / 100
+        longitude_mins = float(tokens[5]) - (longitude_degs * 100)
+        longitude_degs += longitude_mins / 60
+        if tokens[6] == 'W':
+            longitude_degs *= -1
 
-    longitude_degs = int(float(tokens[5])) / 100
-    longitude_mins = float(tokens[5]) - (longitude_degs * 100)
-    longitude_degs += longitude_mins / 60
-    if tokens[6] == 'W':
-        longitude_degs *= -1
-
-    latitude_degs = int(float(tokens[3])) / 100
-    latitude_mins = float(tokens[3]) - (latitude_degs * 100)
-    latitude_degs += latitude_mins / 60
-    if tokens[4] == 'S':
-        latitude_degs *= -1
+        latitude_degs = int(float(tokens[3])) / 100
+        latitude_mins = float(tokens[3]) - (latitude_degs * 100)
+        latitude_degs += latitude_mins / 60
+        if tokens[4] == 'S':
+            latitude_degs *= -1
    
-    velocity = float(tokens[7]) * 0.514444 # convert to meters
+        velocity = float(tokens[7]) * 0.514444 # convert to meters
     
-    return Location(fix, longitude_degs, latitude_degs, velocity)
+        return Location(fix, longitude_degs, latitude_degs, velocity)
+    else:
+        return Location(fix, 0.0,0.0,0.0)
 
 # Private
 # Returns GPRMC NEMA sentences
