@@ -34,11 +34,11 @@ def getFix():
 # Will return None if no satelite lock
 def getLongitude():
     if getFix():
-        token = _getGPRMCToken(4)
+        token = _getGPRMCToken(5)
         longitude_degs = int(float(token)) / 100
         longitude_mins = float(token) - (longitude_degs * 100)
         longitude_degs += longitude_mins / 60
-        if _getGPRMCToken(5) == 'W':
+        if _getGPRMCToken(6) == 'W':
             longitude_degs *= -1
         return longitude_degs
     else:
@@ -48,11 +48,11 @@ def getLongitude():
 # Will return None if no satelite lock
 def getLatitude():
     if getFix():
-        token = _getGPRMCToken(2)
+        token = _getGPRMCToken(3)
         latitude_degs = int(float(token)) / 100
         latitude_mins = float(token) - (latitude_degs * 100)
         latitude_degs += latitude_mins / 60
-        if _getGPRMCToken(3) == 'S':
+        if _getGPRMCToken(4) == 'S':
             latitude_degs *= -1
         return latitude_degs
     else:
