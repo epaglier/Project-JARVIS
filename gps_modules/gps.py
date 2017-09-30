@@ -82,3 +82,4 @@ def _getGPRMC():
         else:
             break
     return NEMA
+
