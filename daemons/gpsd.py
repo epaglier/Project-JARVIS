@@ -1,7 +1,12 @@
 import sys
 import time
+import subprocess
+import os
 
-sys.path.append('home/daniel/mycroft-core/gps_modules')
+# get a module from a different directory
+user = os.getlogin()
+sys.path.insert(0, '/home/' + user + '/mycroft-core/gps_modules/')
+
 import gps
 
 signal = False
