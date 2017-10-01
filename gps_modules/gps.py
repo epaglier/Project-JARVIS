@@ -37,6 +37,22 @@ class Location:
         if self.getFix():
             return self.velocity
         return None
+    
+    # Returns transportation type as an int
+    # -1 - Error (outside expected range)
+    #  0 - Walking/jogging/running
+    #  1 - Biking/small wheels/jogging/running
+    #  2 - Car/large vehicle
+    def getTransportation(self):
+        if self.getFix():
+            vel = self.getVelocity()
+            if vel < 3: # about 6.7 mph
+                return 0
+            elif vel < 7: # about 15.7 mph
+                return 1
+            elif vel < 70: # about 157 mph
+                return 2
+        return -1 # wtf this person's doing 160
 
 # Returns a Location object
 # call getter methods to info
@@ -84,3 +100,4 @@ def _getGPRMC():
         else:
             break
     return NEMA
+
