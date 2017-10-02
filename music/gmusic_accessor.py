@@ -1,6 +1,6 @@
-from music import music_player
 from gmusicapi import Mobileclient
 
+from music.music_player import MusicAccessException
 from music.music_player import Song
 
 api = Mobileclient()
@@ -17,8 +17,7 @@ def authenticate(account, password):
 
 
 def retrieve_song_list():
-    if not api.is_authenticated():
-        raise music_player.MusicAccessException('Please authenticate yourself first.')
+    __check_authentication()
     music_library = api.get_all_songs()
     song_list = []
     for song_entry in music_library:
@@ -27,3 +26,13 @@ def retrieve_song_list():
                                     song_entry["title"],
                                     song_entry["id"]))
     return song_list
+
+
+def get_song_stream(song):
+    __check_authentication()
+    return api.get_stream_url(song.song_id)
+
+
+def __check_authentication():
+    if not api.is_authenticated():
+        raise MusicAccessException('Please authenticate yourself first.')
