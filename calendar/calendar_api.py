@@ -26,10 +26,8 @@ APPLICATION_NAME = 'Google Calendar API Python Quickstart'
 #google funciton to get credentials
 def get_credentials():
     """Gets valid user credentials from storage.
-
     If nothing has been stored, or if the stored credentials are invalid,
     the OAuth2 flow is completed to obtain the new credentials.
-
     Returns:
         Credentials, the obtained credential.
     """
@@ -37,8 +35,7 @@ def get_credentials():
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'calendar-python-quickstart.json')
+    credential_path = os.path.join(credential_dir, 'calendar-python-quickstart.json')
 
     store = Storage(credential_path)
     credentials = store.get()
@@ -59,39 +56,39 @@ class Calendar_Mutator:
     
     def setEvent(self,event, location, description):
         event = {
-                  'summary': event,
-                'location': location,
-                  'description': description,
-                'start': {
-                                'dateTime': '2017-10-2T09:00:00-07:00',
-                                    'timeZone': 'America/Los_Angeles',
-                                      },
+            'summary': event,
+            'location': location,
+            'description': description,
+            'start': {
+                    'dateTime': '2017-10-2T09:00:00-07:00',
+                    'timeZone': 'America/Los_Angeles',
+            },
             'end': {
-                                            'dateTime': '2017-10-04T17:00:00-07:00',
-                                                'timeZone': 'America/Los_Angeles',
-                                                  },
+                    'dateTime': '2017-10-04T17:00:00-07:00',
+                    'timeZone': 'America/Los_Angeles',
+            },
             'recurrence': [
-                                                        'RRULE:FREQ=DAILY;COUNT=2'
-                                                          ],
+                    'RRULE:FREQ=DAILY;COUNT=2'
+            ],
             'reminders': {
-                        'useDefault': False,
-                        'overrides': [
-                            {'method': 'email', 'minutes': 24 * 60},
-                                                 {'method': 'popup', 'minutes': 10},
-                                                        ],
-                              },
-                }
+                    'useDefault': False,
+                    'overrides': [
+                        {'method': 'email', 'minutes': 24 * 60},
+                        {'method': 'popup', 'minutes': 10},
+                    ],
+            },
+        }
         
         event = Calendar_Mutator.service.events().insert(calendarId='primary', body=event).execute()
         print('what the fuck are classes')
         print('Event created: %s', (event.get('htmlLink')))        
     
-    def getXEvents(self):
+    def getXEvents(self, numEvents):
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
         
         eventsResult = Calendar_Mutator.service.events().list(
-          calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+          calendarId='primary', timeMin=now, maxResults=numEvents, singleEvents=True,
           orderBy='startTime').execute()
         events = eventsResult.get('items', [])
         
@@ -104,15 +101,10 @@ class Calendar_Mutator:
     def getEventsForDay():
         print('get the events for the whole day!')
 
-def main():
-    event = 'dick sucking contest'
-    location = 'room 11'
-    description = 'it is goin down'
-    cm = Calendar_Mutator()
-    cm.setEvent(event,location,description)
-    cm.getXEvents() 
-
-
-if __name__ == '__main__':
-    main()
-
+event = 'dick sucking contest'
+location = 'room 11'
+description = 'it is goin down'
+cm = Calendar_Mutator()
+cm.setEvent(event,location,description)
+numEvents = 4
+cm.getXEvents(numEvents) 
