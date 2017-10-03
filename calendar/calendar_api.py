@@ -21,43 +21,7 @@ SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Google Calendar API Python Quickstart'
 
-class Calendar_Mutator:
-    def setEvent(self):
-        credentials = get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http)
-        event = {
-                  'summary': 'Google I/O 2015',
-                'location': '800 Howard St., San Francisco, CA 94103',
-                  'description': 'A chance to hear more about Google\'s developer products.',
-                'start': {
-                                'dateTime': '2015-05-28T09:00:00-07:00',
-                                    'timeZone': 'America/Los_Angeles',
-                                      },
-            'end': {
-                                            'dateTime': '2015-05-28T17:00:00-07:00',
-                                                'timeZone': 'America/Los_Angeles',
-                                                  },
-            'recurrence': [
-                                                        'RRULE:FREQ=DAILY;COUNT=2'
-                                                          ],
-             'attendees': [
-                                  {'email': 'lpage@example.com'},
-                                      {'email': 'sbrin@example.com'},
-                                        ],
-            'reminders': {
-                        'useDefault': False,
-                        'overrides': [
-                                             {'method': 'email', 'minutes': 24 * 60},
-                                                 {'method': 'popup', 'minutes': 10},
-                                                        ],
-                              },
-                }
-        
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        print('what the fuck are classes')
-        print('Event created: %s', (event.get('htmlLink')))        
-
+    
 
 #google funciton to get credentials
 def get_credentials():
@@ -88,29 +52,65 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-
-    Creates a Google Calendar API service object and outputs a list of the next
-    10 events on the user's calendar.
-    """
+class Calendar_Mutator:
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
-    cm = Calendar_Mutator()
-    cm.setEvent()
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    eventsResult = service.events().list(
-        calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
-        orderBy='startTime').execute()
-    events = eventsResult.get('items', [])
-    if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
     
+    def setEvent(self,event, location, description):
+        event = {
+                  'summary': event,
+                'location': location,
+                  'description': description,
+                'start': {
+                                'dateTime': '2017-10-2T09:00:00-07:00',
+                                    'timeZone': 'America/Los_Angeles',
+                                      },
+            'end': {
+                                            'dateTime': '2017-10-04T17:00:00-07:00',
+                                                'timeZone': 'America/Los_Angeles',
+                                                  },
+            'recurrence': [
+                                                        'RRULE:FREQ=DAILY;COUNT=2'
+                                                          ],
+            'reminders': {
+                        'useDefault': False,
+                        'overrides': [
+                            {'method': 'email', 'minutes': 24 * 60},
+                                                 {'method': 'popup', 'minutes': 10},
+                                                        ],
+                              },
+                }
+        
+        event = Calendar_Mutator.service.events().insert(calendarId='primary', body=event).execute()
+        print('what the fuck are classes')
+        print('Event created: %s', (event.get('htmlLink')))        
+    
+    def getXEvents(self):
+        now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+        print('Getting the upcoming 10 events')
+        
+        eventsResult = Calendar_Mutator.service.events().list(
+          calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+          orderBy='startTime').execute()
+        events = eventsResult.get('items', [])
+        
+        if not events:
+            print('No upcoming events found.')
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            print(start, event['summary'])
+    
+    def getEventsForDay():
+        print('get the events for the whole day!')
+
+def main():
+    event = 'dick sucking contest'
+    location = 'room 11'
+    description = 'it is goin down'
+    cm = Calendar_Mutator()
+    cm.setEvent(event,location,description)
+    cm.getXEvents() 
 
 
 if __name__ == '__main__':
