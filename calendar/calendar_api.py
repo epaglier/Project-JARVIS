@@ -67,9 +67,6 @@ class Calendar_Mutator:
                     'dateTime': '2017-10-04T17:00:00-07:00',
                     'timeZone': 'America/Los_Angeles',
             },
-            'recurrence': [
-                    'RRULE:FREQ=DAILY;COUNT=2'
-            ],
             'reminders': {
                     'useDefault': False,
                     'overrides': [
@@ -80,15 +77,15 @@ class Calendar_Mutator:
         }
         
         event = Calendar_Mutator.service.events().insert(calendarId='primary', body=event).execute()
-        print('what the fuck are classes')
-        print('Event created: %s', (event.get('htmlLink')))        
+        print('Event = ', (event.get('htmlLink')))        
     
     def getXEvents(self, numEvents):
+        print('Getting the upcoming ', numEvents)
+         
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-        print('Getting the upcoming 10 events')
         
         eventsResult = Calendar_Mutator.service.events().list(
-          calendarId='primary', timeMin=now, maxResults=numEvents, singleEvents=True,
+          calendarId='primary', timeMin = now, maxResults=numEvents, singleEvents=True,
           orderBy='startTime').execute()
         events = eventsResult.get('items', [])
         
