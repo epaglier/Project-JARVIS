@@ -97,11 +97,3 @@ class Calendar_Mutator:
     
     def getEventsForDay():
         print('get the events for the whole day!')
-
-event = 'dick sucking contest'
-location = 'room 11'
-description = 'it is goin down'
-cm = Calendar_Mutator()
-cm.setEvent(event,location,description)
-numEvents = 4
-cm.getXEvents(numEvents) 
