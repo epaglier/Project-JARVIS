@@ -9,12 +9,18 @@ LOGGER = getLogger(__name__)
 
 class guscalendarSkill(MycroftSkill):
     def __init__(self):
-
+        super(guscalendarSkill, self).__init__(name = "guscalendarSkill")
+    
     def initialize(self):
-
-    def handle_guscalendar_intent(self):
-
+        create_event_intent = IntentBuilder("CreateEventIntent").\
+            require("CreateEventKeyword").build()
+        self.register_intent(create_event_intent, self.handle_create_event_intent)
+    
+    def handle_create_event_intent(self, message):
+        self.speak_dialog("created")
+    
     def stop(self):
+        pass
 
 def create_skill():
-    
+    return guscalendarSkill()
