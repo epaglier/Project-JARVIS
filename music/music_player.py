@@ -1,4 +1,4 @@
-import vlc
+#import vlc
 
 
 class Song:
@@ -25,9 +25,9 @@ def find_songs_by_name(song_list, title_substring):
     return matches
 
 
-def create_player(source):
-    if isinstance(source, unicode):
-        source = source.encode()
-    elif not isinstance(source, str):
-        raise Exception('Unknown or unsupported music source.')
-    return vlc.MediaPlayer(source)
+#def create_player(source):
+#    if isinstance(source, unicode):
+#        source = source.encode()
+#    elif not isinstance(source, str):
+#        raise Exception('Unknown or unsupported music source.')
+#    return vlc.MediaPlayer(source)

@@ -1,7 +1,7 @@
 from gmusicapi import Mobileclient
 
-from music.music_player import MusicAccessException
-from music.music_player import Song
+from music_player import MusicAccessException
+from music_player import Song
 
 api = Mobileclient()
 
