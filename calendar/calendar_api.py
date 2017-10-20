@@ -6,8 +6,19 @@ from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
-
+from oauth2client import file
 import datetime
+import calendar
+import time
+
+from os.path import dirname, abspath, join, expanduser
+import sys
+
+import json
+from json import JSONEncoder
+import subprocess
+import tzlocal
+from astral import Astral
 
 try:
     import argparse
@@ -54,17 +65,17 @@ class Calendar_Mutator:
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
     
-    def setEvent(self,event, location, description):
+    def setEvent(self,event, location, description, ):
         event = {
             'summary': event,
             'location': location,
             'description': description,
             'start': {
-                    'dateTime': '2017-10-2T09:00:00-07:00',
+                    'dateTime': '2017-10-05T09:00:00-07:00',
                     'timeZone': 'America/Los_Angeles',
             },
             'end': {
-                    'dateTime': '2017-10-04T17:00:00-07:00',
+                    'dateTime': '2017-10-06T17:00:00-07:00',
                     'timeZone': 'America/Los_Angeles',
             },
             'reminders': {
@@ -78,7 +89,11 @@ class Calendar_Mutator:
         
         event = Calendar_Mutator.service.events().insert(calendarId='primary', body=event).execute()
         print('Event = ', (event.get('htmlLink')))        
-    
+        
+    def getEventsForDay(self):
+        
+
+
     def getXEvents(self, numEvents):
         print('Getting the upcoming ', numEvents)
          
