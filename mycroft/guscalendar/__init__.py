@@ -1,5 +1,8 @@
 from adapt.intent import IntentBuilder
+from mycroft.messagebus.message import Message
 
+from mycroft.configuration import ConfigurationManager
+from mycroft.util import record, play_mp3
 from mycroft.skills.core import MycroftSkill
 from mycroft.util.log import getLogger
 from __future__ import print_function
