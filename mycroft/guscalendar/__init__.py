@@ -124,6 +124,19 @@ def todayEnd():
     today = datetime.datetime.utcnow().replace(hour=23, minute=59, second=59)
     today = += datetime.timedelta(days=1)
     today = today.isoformat() + 'Z'
+    return today
+
+def tomorrowStart():
+    tomorrow = datetime.datetime.utcnow().replace(hour=00, minute=00, second=01)
+    tomorrow += datetime.timedelta(days=1)
+    tomorrow = tomorrow.isoformat() + 'Z'
+    return tomrrow
+def tomorrowEnd():
+    tomorrow = datetime.datetime.utcnow().replace(hour=23, minute=59, second=59)
+    tomorrow += datetime.timedelta(days=2)
+    tomorrow = tomorrow.isoformat() + 'Z'
+    return tomrrow
+
 
 class guscalendarSkill(MycroftSkill):
     def __init__(self):
