@@ -9,6 +9,8 @@ initialized = False
 exiting = False
 print "Initializing..."
 
+GOOGLE_MAPS_API_KEY = "AIzaSyBMK5WI2yWUnBpnToA7FX0bKf8Lkb3RWBQ"
+
 stream = serial.Serial('/dev/ttyS0')
 
 class Location:
@@ -105,17 +107,22 @@ def _getLocation():
         return Location(fix, None, None, None)
 
 location = Location(0, None, None, None)
+lock = None
 
 def collect():
-    while True: 
-        global location
-        global initialized
-        location = _getLocation()
+    sys.stdout.write("TEST BITCH\n")
+    global location
+    global initialized
+    global exiting
+    while True:
         if not initialized:
             initialized = True
+        location = _getLocation()
+        sys.stdout.write("exiting? " + repr(exiting) + "\n")
         if exiting:
+            sys.stdout.write("Exiting thread...")
             break
-
+        
 # I'd like to do some sort of interrupt for initialization
 # but I'm not 100% sure how that would work so now it polls
 # every 1/10 of a second.
@@ -126,9 +133,10 @@ def getLocation():
 
 def exit():
     exiting = True
-    print "Exiting thread..."
+    sys.stdout.write("in exit()\n")
     time.sleep(1)
-    print "Done"
+    #print "Done"
+    sys.stdout.write("Done\n")
 
 atexit.register(exit)
 collector = threading.Thread(target = collect)
