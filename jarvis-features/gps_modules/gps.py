@@ -108,39 +108,39 @@ def _getLocation():
 
 location = Location(0, None, None, None)
 lock = None
+lock = threading.Lock()
 
 def collect():
-    sys.stdout.write("TEST BITCH\n")
     global location
     global initialized
     global exiting
+    global lock
     while True:
+        location = _getLocation()
         if not initialized:
             initialized = True
-        location = _getLocation()
-        sys.stdout.write("exiting? " + repr(exiting) + "\n")
         if exiting:
-            sys.stdout.write("Exiting thread...")
+            sys.stdout.write("Exiting thread... ")
+            sys.stdout.flush()
             break
         
 # I'd like to do some sort of interrupt for initialization
 # but I'm not 100% sure how that would work so now it polls
 # every 1/10 of a second.
 def getLocation():
+    global initialized
     while not initialized:
         time.sleep(0.1) # Yield CPU and poll
     return location
 
 def exit():
+    global exiting
     exiting = True
-    sys.stdout.write("in exit()\n")
-    time.sleep(1)
-    #print "Done"
+    collector.join() #blocks until collector thread dies
     sys.stdout.write("Done\n")
 
 atexit.register(exit)
 collector = threading.Thread(target = collect)
 collector.daemon = True
 collector.start()
-#thread.start_new_thread(collect, ())
 
