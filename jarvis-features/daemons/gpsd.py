@@ -5,7 +5,7 @@ import os
 
 # get a module from a different directory
 user = os.getlogin()
-sys.path.insert(0, '/home/' + user + '/mycroft-core/gps_modules/')
+sys.path.insert(0, '../gps_modules/')
 
 import gps
 
@@ -16,11 +16,11 @@ while(True):
     loc = gps.getLocation()
     if loc.getFix() and not signal:
         # no signal -> signal
-        subprocess.check_output(["../mimic/mimic", "-t", "\"GPS signal established.\""])
+        subprocess.check_output(["../../mycroft-core/mimic/mimic", "-t", "\"GPS signal established.\""])
         signal = True
         print "[gpsd] GPS signal established."
     elif not loc.getFix() and signal:
         # signal -> no signal
-        subprocess.check_output(["../mimic/mimic", "-t", "\"GPS signal lost.\""])
+        subprocess.check_output(["../../mycroft-core/mimic/mimic", "-t", "\"GPS signal lost.\""])
         signal = False
         print "[gpsd] GPS signal lost."
