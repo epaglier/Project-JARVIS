@@ -136,6 +136,11 @@ def tomorrowEnd():
     tomorrow += datetime.timedelta(days=2)
     tomorrow = tomorrow.isoformat() + 'Z'
     return tomrrow
+def parseDateTime(string):
+    if '+' in string
+        return datetime.datetime.strptime(string, "%Y-%m-%dT%H:%M:%S+%f")
+    else
+        return datetime.datetime.strptime(string, "%Y-%m-%dT%H:%M:%S-%f")
 
 
 class guscalendarSkill(MycroftSkill):
@@ -146,12 +151,110 @@ class guscalendarSkill(MycroftSkill):
         create_event_intent = IntentBuilder("CreateEventIntent").\
             require("CreateEventKeyword").build()
         self.register_intent(create_event_intent, self.handle_create_event_intent)
-    
+        
+       get_nextEvent_intent = IntentBuilder("NextEventIntent")\
+            .require("NextKeyword")\
+            .require("EventKeyword")\
+            .build()
+        self.register_intent(get_nextEvent_intent, self.handle_next_event);
+
+
     def handle_create_event_intent(self, message):
         self.speak_dialog("created")
-    
-    def stop(self):
-        pass
+
+    def handle_next_event
+        credentials = get_credentials()
+        http = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http)
+        eventsResult = Calendar_Mutator.service.events().list(
+          calendarId='primary', timeMin = now, maxResults=1, singleEvents=True,
+          orderBy='startTime').execute()
+        events = eventsResult.get('items', [])
+        
+        if not events
+            self.speak_dialog("NoEvents")
+        else
+            next = events[0]
+            place = ''
+            description = ''
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            start = start[:22]+start[(22+1):]
+            start = parse_datetime_string(start)
+                                    
+            today = datetime.datetime.strptime(time.strftime("%x"),"%m/%d/%y") 
+            tomorrow = today + datetime.timedelta(days=1)
+            date_compare = datetime.datetime.strptime(start.strftime("%x"),"%m/%d/%y")credentials = get_credentials()
+            
+            rangeDate = "today"
+            if (date_compare == today):
+                rangeDate = "today"
+            elif (date_compare == tomorrow):
+                rangeDate = "tomorrow"
+            else:
+                month_name = (calendar.month_name[start.month])
+                day_name = (calendar.day_name[start.weekday()])
+                day = str(start.day)
+                rangeDate = day_name + ", " + month_name + " " + day
+            
+            startHour = ("{:d}:{:02d}".format(start.hour, start.minute))
+            startHour = time.strptime(startHour,"%H:%M")
+            startHour = time.strftime("%I:%M %p",startHour)
+            if (startHour[0]=='0'): startHour = startHour.replace('0','',1)
+            end = event['end'].get('dateTime', event['end'].get('date'))
+            end = end[:22]+end[(22+1):]
+            end = parse_datetime_string(end)
+            endHour = ("{:d}:{:02d}".format(end.hour, end.minute))
+            endHour = time.strptime(endHour,"%H:%M")
+            endHour = time.strftime("%I:%M %p",endHour)
+            if (endHour[0]=='0'): endHour = endHour.replace('0','',1)
+
+            complete_phrase = ""
+           
+            if(checkLocation(event)):
+                location = event['location']
+                location = location.splitlines()
+                place_city = ','.join(location[:1])
+                place =  " on " + place_city 
+            else:
+                place =  ""
+           
+            status = event['status']
+            summary = event['summary']
+
+            if(checkDescription(event))
+                description = event['description']
+            else
+               description = ''
+
+            if (len(organizer)) == 2:
+                organizer = organizer['displayName']
+                if (where.upper() == "WHERE"):
+                    if (len(place) > 3):
+                        complete_phrase = "Your next appointment will be" + place + " organized by " + organizer + " "
+                        place = ""
+                    else:
+                        complete_phrase = "There is not detailed place, but " + organizer + " has scheduled a appointment for "
+                else:
+                    complete_phrase = organizer + " has scheduled a appointment for "
+
+                complete_phrase = complete_phrase + rangeDate  + " begining at " + startHour + " and ending at " + endHour + place
+                complete_phrase = complete_phrase + ". About " + summary + ". " + description
+            
+            elif (len(organizer)) == 3:
+                if (where.upper() == "WHERE"):
+                    if (len(place) > 3):
+                        complete_phrase = "Your next appointment will be" + place + " "
+                        place = ""
+                    else:
+                        complete_phrase = "There is not detailed place, but you have a appointment "
+                else:
+                    complete_phrase = "You have a appointment "
+
+                complete_phrase = complete_phrase + rangeDate  + " from " + startHour + " at " + endHour + place 
+                complete_phrase = complete_phrase + ". About " + summary + ". " + description
+
+        self.speak(complete_phrase)
+
 
 def create_skill():
     return guscalendarSkill()
