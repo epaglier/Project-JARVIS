@@ -3,7 +3,7 @@ import math
 import matplotlib.pyplot as plt
 from geopy.distance import great_circle
 
-inputTextFile = sys.argv[1]
+inputTextFile = "output.txt"#sys.argv[1]
 distThresh = .01 #mile
 radius = distThresh
 #open file
