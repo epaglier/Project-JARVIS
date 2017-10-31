@@ -1,7 +1,7 @@
 import sys
 import math
 import matplotlib.pyplot as plt
-from geopy.distance import great_circle
+#from geopy.distance import great_circle
 
 inputTextFile = "output.txt"#sys.argv[1]
 distThresh = .01 #mile
@@ -113,8 +113,10 @@ def plot(points):
 	plt.xlabel('Longetude')
 	#plt.axis([38, 42, -90, -85])
 	plt.show()
-list = rankAll()
-sortedList = sortList(list)
-reduct = reduce(sortedList)
-print reduct
-plot(reduct)
+
+def findAndPlot():
+        list = rankAll()
+        sortedList = sortList(list)
+        reduct = reduce(sortedList)
+        print("\n\n\n")
+        plot(reduct)
