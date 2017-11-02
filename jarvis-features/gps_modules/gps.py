@@ -4,6 +4,8 @@ import threading
 import sys
 import time
 import atexit
+import urllib2
+import json
 
 initialized = False
 exiting = False
@@ -18,10 +20,22 @@ class Location:
     # Constructor
     # Pass in various variables to create it
     def __init__(self, _fix, _longitude, _latitude, _velocity):
+        self.formatted_address = "Address unavailable"
+        if _fix:
+            maps_query = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + repr(_latitude) +"," + repr(_longitude) + "&key=" + GOOGLE_MAPS_API_KEY
+            response = urllib2.urlopen(maps_query).read()
+            parsed_data = json.loads(response)
+
+            self.formatted_address = parsed_data['results'][0]['formatted_address']
+
         self.fix = _fix
         self.longitude = _longitude
         self.latitude = _latitude
         self.velocity = _velocity
+
+
+    def getFormattedAddress(self):
+        return self.formatted_address
 
     # Returns True if there is a satelite fix
     # Returns False if no satelite lock
