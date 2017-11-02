@@ -33,7 +33,8 @@ class Location:
         self.latitude = _latitude
         self.velocity = _velocity
 
-
+    # Returns a fromatted string in the form
+    # Number Street, Municipality, State Zip, Country
     def getFormattedAddress(self):
         return self.formatted_address
 
