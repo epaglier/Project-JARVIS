@@ -28,6 +28,8 @@ print "Type: " + repr(loc.getTransportation())
 print "Formatted Address: " + loc.getFormattedAddress()
 print "Distance to Washington, DC (Driving): " + repr(loc.getDistTo("Washington,DC","driving")) + " km"
 print "---------------------------------"
+print "Directions to Washington, DC (Driving): " + loc.getDirectionsTo("Washington,DC","driving")
+print "---------------------------------"
 print "Precipitation: " + w.getPrecipitation()
 print "Temperature: %.2f F" % w.getTempF()
 print "Humidity: " + repr(w.getHumidity()) + "%"

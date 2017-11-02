@@ -6,6 +6,8 @@ import time
 import atexit
 import urllib2
 import json
+import re
+
 
 initialized = False
 exiting = False
@@ -51,7 +53,27 @@ class Location:
         response = urllib2.urlopen(request).read()
         parsed_data = json.loads(response)
         return parsed_data['rows'][0]['elements'][0]['distance']['value']/1000.0
-        
+    
+    # Returns the directions to a destination from the current location
+    # _mode accepts "driving", "walking", "bicycling"
+    # Note: _destination is NOT sanitized so don't f*ck it up
+    # Note: Also don't include whitespace in _destination
+    def getDirectionsTo(self, _destination, _mode):
+        if _mode != "driving" and _mode != "walking" and _mode != "bicycling":
+            return "Directions unavailable Err code 1" # sanitize inputs (security)
+        if not self.fix:
+            return "Directions unavailable Err code 2" # only do this if we have a GPS lock
+        request = "https://maps.googleapis.com/maps/api/directions/json?units=metric&mode=" + _mode + "&origin=" + repr(self.latitude) + "," + repr(self.longitude) + "&destination=" + _destination + "&key=" + GOOGLE_MAPS_API_KEY
+        response = urllib2.urlopen(request).read()
+        parsed_data = json.loads(response)
+        directions = ""
+        for step in parsed_data['routes'][0]['legs'][0]['steps']:
+            # Regex ~magic~
+            current = re.sub('<\/div>', '', step['html_instructions'])
+            current = re.sub('<div[^<>]*>', '\n', step['html_instructions'])
+            current = re.sub('<[^<>]*>', '', current)
+            directions += current + "\n"
+        return directions
 
     # Returns True if there is a satelite fix
     # Returns False if no satelite lock
