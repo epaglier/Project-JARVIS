@@ -26,6 +26,7 @@ print "Lat: " + repr(loc.getLatitude())
 print "Fix: " + repr(loc.getFix())
 print "Type: " + repr(loc.getTransportation())
 print "Formatted Address: " + loc.getFormattedAddress()
+print "Distance to Washington, DC (Driving): " + repr(loc.getDistTo("Washington,DC","driving")) + " km"
 print "---------------------------------"
 print "Precipitation: " + w.getPrecipitation()
 print "Temperature: %.2f F" % w.getTempF()

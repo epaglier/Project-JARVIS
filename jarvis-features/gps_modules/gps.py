@@ -37,6 +37,21 @@ class Location:
     # Number Street, Municipality, State Zip, Country
     def getFormattedAddress(self):
         return self.formatted_address
+    
+    # Returns the distance in km to a destination from the current location
+    # _mode accepts "driving", "walking", "bicycling"
+    # Note: _destination is NOT sanitized so don't f*ck it up
+    # Note: Also don't include whitespace in _destination
+    def getDistTo(self, _destination, _mode):
+        if _mode != "driving" and _mode != "walking" and _mode != "bicycling":
+            return -1 # sanitize inputs (security)
+        if not self.fix:
+            return -2 # only do this if we have a GPS lock
+        request = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=" + _mode + "&origins=" + repr(self.latitude) + "," + repr(self.longitude) + "&destinations=" + _destination + "&key=" + GOOGLE_MAPS_API_KEY
+        response = urllib2.urlopen(request).read()
+        parsed_data = json.loads(response)
+        return parsed_data['rows'][0]['elements'][0]['distance']['value']/1000.0
+        
 
     # Returns True if there is a satelite fix
     # Returns False if no satelite lock
