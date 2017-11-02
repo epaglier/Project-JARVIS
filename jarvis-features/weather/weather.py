@@ -23,6 +23,9 @@ class Weather:
         raw_weather_data = urllib2.urlopen(query).read()
         parsed_data = json.loads(raw_weather_data)
         self.temp_kelvin = parsed_data['main']['temp']
+        self.humidity = parsed_data['main']['humidity']
+        self.precipitation = parsed_data['weather'][0]['description']
+        self.wind = parsed_data['wind']['speed']
 
     # Returns a float of temperature in degrees Kelvin (default)
     def getTempK(self):
@@ -31,10 +34,29 @@ class Weather:
     # Returns a float of temperature in degrees Farenheit
     def getTempF(self):
         return self.getTempK() * (9.0/5) - 459.67
+    
+    # Returns a float of temperature in degrees Celcius
+    def getTempC(self):
+        return self.getTempK() - 273.15
+    
+    # Returns humidity as a percentage
+    def getHumidity(self):
+        return self.humidity
 
-#TEMPORARY DEBUG CODE
+    # Returns a string representing cloud cover/rain/etc.
+    # see https://openweathermap.org/weather-conditions for details
+    def getPrecipitation(self):
+        return self.precipitation
 
-loc = gps.getLocation()
-w = Weather(loc.getLongitude(), loc.getLatitude())
+    # Returns wind speed in meters / second
+    def getWind(self):
+        return self.wind
 
-print "temp: " + repr(w.getTempF())
+# Returns the current weather at the given coordinates
+def getWeather(longitude, latitude):
+    return Weather(longitude, latitude)
+
+# Helper function that returns the weather at JARVIS's current location
+def getWeatherHere():
+    loc = gps.getLocation()
+    return getWeather(loc.getLongitude(), loc.getLatitude())
