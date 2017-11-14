@@ -11,12 +11,6 @@ import weather
 
 # Test file
 
-response = urllib2.urlopen("https://maps.googleapis.com/maps/api/geocode/json?latlng=40.43201666666666,-86.92631166666666&key=AIzaSyBMK5WI2yWUnBpnToA7FX0bKf8Lkb3RWBQ").read()
-jsonthing = json.loads(response)
-
-street_number = jsonthing['results'][0]['address_components'][0]['short_name']
-street = jsonthing['results'][0]['address_components'][1]['short_name']
-
 loc = gps.getLocation()
 w = weather.getWeatherHere()
 
@@ -26,9 +20,9 @@ print "Lat: " + repr(loc.getLatitude())
 print "Fix: " + repr(loc.getFix())
 print "Type: " + repr(loc.getTransportation())
 print "Formatted Address: " + loc.getFormattedAddress()
-print "Distance to Washington, DC (Driving): " + repr(loc.getDistTo("Washington,DC","driving")) + " km"
+print "Distance to Chicago (Driving): " + repr(loc.getDistTo("Chicago","driving")) + " km"
 print "---------------------------------"
-print "Directions to Washington, DC (Driving): " + loc.getDirectionsTo("Washington,DC","driving")
+print "Directions to Chicago (Driving): " + loc.getDirectionsTo("Chicago","driving")
 print "---------------------------------"
 print "Precipitation: " + w.getPrecipitation()
 print "Temperature: %.2f F" % w.getTempF()

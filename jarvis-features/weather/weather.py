@@ -19,7 +19,7 @@ class Weather:
         self.longitude = _longitude;
         self.latitude = _latitude;
         query = "http://api.openweathermap.org/data/2.5/weather?lat=" + repr(self.latitude) + "&lon=" + repr(self.longitude) + "&appid=" + OWM_API_KEY
-
+        
         raw_weather_data = urllib2.urlopen(query).read()
         parsed_data = json.loads(raw_weather_data)
         self.temp_kelvin = parsed_data['main']['temp']

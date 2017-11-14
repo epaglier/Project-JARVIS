@@ -169,8 +169,7 @@ def collect():
     global lock
     while True:
         location = _getLocation()
-        if not initialized:
-            initialized = True
+        initialized = True
         if exiting:
             sys.stdout.write("Exiting thread... ")
             sys.stdout.flush()
