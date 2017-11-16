@@ -8,10 +8,10 @@ while(True):
     wlan = subprocess.check_output(["iwconfig", "wlan0"])
     if wlan[10:21] == "IEEE 802.11" and  not signal: 
         # signal restored. signal False -> True
-        subprocess.check_output(["../mimic/mimic", "-t", "\"Wifi signal restored.\""])
+        subprocess.check_output(["/bin/mimic/mimic", "-t", "\"Wifi signal restored.\""])
         signal = True
     elif wlan[10:21] != "IEEE 802.11" and signal: 
         # signal lost. signal True -> False
-        subprocess.check_output(["../mimic/mimic", "-t", "\"Wifi signal lost.\""])
+        subprocess.check_output(["/bin/mimic/mimic", "-t", "\"Wifi signal lost.\""])
         signal = False
     
