@@ -5,6 +5,7 @@ import sys
 import subprocess
 import random
 
+# Used to randomly select a joke source
 rand = random.randint(0, 2)
 
 if rand == 0:
