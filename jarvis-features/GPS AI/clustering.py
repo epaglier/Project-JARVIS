@@ -1,7 +1,6 @@
 import sys
 import math
-import matplotlib.pyplot as plt
-from geopy.distance import great_circle
+#from geopy.distance import great_circle
 
 inputTextFile = "output.txt"#sys.argv[1]
 distThresh = .01 #mile
@@ -47,15 +46,15 @@ def getAllPoints():
 
 #testAllPoints
 #print getAllPoints()
-print "Loading list..."
+#print "Loading list..."
 pointlist = getAllPoints()
-print "Loaded"
+#print "Loaded"
 
 #adds ranking to loaded list (finds num neighbors within range)
 def rankAll():
 	rankedPointz = []
 	for point in pointlist:
-		print "Running rank for point " + str(point[0]) + "..."
+		#print "Running rank for point " + str(point[0]) + "..."
 		numNeighbors = 0
 		for point2 in pointlist:
 			if point != point2 and distance(point,point2) < distThresh:
@@ -63,12 +62,12 @@ def rankAll():
 				#iprint distance(point,point2)
 		point.append(numNeighbors)
 		rankedPointz.append(point)
-		print point[4]
+		#print point[4]
 	return rankedPointz
 
 #legacy
 def sortList(points):
-	print "Filtering List"
+	#print "Filtering List"
 	ranked_points = []
 	ranked_points.append(points[0])
 	for point in points:
@@ -76,13 +75,13 @@ def sortList(points):
 		for i in range(0,len(ranked_points)):
 			if distance(point,ranked_points[i]) > radius:
 				ranked_points.insert(i, point)
-				print "Inserting " + point[0] + ": value=" + str(point[4]) +": At position " + str(i)
+				#print "Inserting " + point[0] + ": value=" + str(point[4]) +": At position " + str(i)
 				insert = True
 				break
 			elif point[4] > ranked_points[i][4]:
 				ranked_points.remove(ranked_points[i])
 				ranked_points.insert(i,point)
-				print "Replacing"
+				#print "Replacing"
 				break
 	return ranked_points
 
@@ -101,20 +100,20 @@ def reduce(points):
 	return newPointList
 								
 
-def plot(points):
-	x_axi = []
-	y_axi = []
-	for point in points:
-		x_axi.append(float(point[1]))
-		y_axi.append(float(point[2]))
-		print point[1] + "," + point[2]
-	plt.plot(x_axi,y_axi, 'ro')
-	plt.ylabel('Latitude')
-	plt.xlabel('Longetude')
+#def plot(points):
+#	x_axi = []
+#	y_axi = []
+#	for point in points:
+#		x_axi.append(float(point[1]))
+#		y_axi.append(float(point[2]))
+#		print point[1] + "," + point[2]
+#	plt.plot(x_axi,y_axi, 'ro')
+#	plt.ylabel('Latitude')
+#	plt.xlabel('Longetude')
 	#plt.axis([38, 42, -90, -85])
-	plt.show()
+#	plt.show()
 list = rankAll()
 sortedList = sortList(list)
 reduct = reduce(sortedList)
 print reduct
-plot(reduct)
+#plot(reduct)
