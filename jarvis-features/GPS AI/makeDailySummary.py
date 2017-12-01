@@ -24,4 +24,3 @@ def make():
 		time = datetime.datetime.strptime(dest[0], '%Y-%m-%d %H:%M:%S')
 		if nowMonth == time.month and time.day == nowDay:
 			file.write(str(time.hour) + ":" + str(time.minute) + "\t" + gps.getFormatForLoc(dest[1],dest[2]) + "\n")
-make()
