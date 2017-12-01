@@ -20,8 +20,8 @@ while True:
 		for tweet in public_tweets:
 			if tweet.text == currTweet.text:
 				break
-			print newestTweet.user.screen_name
-			print newestTweet.text
+                        result = newestTweet.user.screen_name + " tweeted: " + newestTweet.text
+                        print result.encode('utf-8')
 		currTweet = newestTweet
 
 	time.sleep(71)

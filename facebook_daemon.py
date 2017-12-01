@@ -21,5 +21,6 @@ while True:
 			if "message" in post:
 				s= s+ " " + post['message']
 			currPost = post
-			print "Facebook post: " + s
+			result =  "Facebook post: " + s
+                        print result.encode('utf-8')
 		currPost = newPost
