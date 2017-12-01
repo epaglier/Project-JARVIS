@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# For consistency, we run everything as root.
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root."
+  exit
+fi
+
 # Start mopidy music service.
 start_mopidy() {
   mopidy
