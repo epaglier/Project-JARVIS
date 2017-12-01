@@ -180,8 +180,14 @@ def collect():
 # every 1/10 of a second.
 def getLocation():
     global initialized
+    duration = 0.1
+    elapsed = 0
+    threshold = 3 # Don't wait longer than 3 seconds for a fix
     while not initialized:
-        time.sleep(0.1) # Yield CPU and poll
+        if duration > threshold:
+            return location
+        time.sleep(duration) # Yield CPU and poll
+        elapsed += duration
     return location
 
 def exit():
