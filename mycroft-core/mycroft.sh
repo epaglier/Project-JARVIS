@@ -155,7 +155,7 @@ case "$1" in
     fi
   fi
 
-  $0 stop
+  bash $0 stop
   start-mycroft service
   start-mycroft audio
   start-mycroft skills
