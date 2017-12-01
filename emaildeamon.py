@@ -1,14 +1,16 @@
 from adapt.intent import IntentBuilder
-from mycroft.messagebus.message import Message
+#from mycroft.messagebus.message import Message
 
-from mycroft.skills.core import MycroftSkill
-from mycroft.util.log import getLogger
-from mycroft.util import record, play_mp3
+#from mycroft.skills.core import MycroftSkill
+#from mycroft.util.log import getLogger
+#from mycroft.util import record, play_mp3
 
 import httplib2
 import os
 from os.path import dirname, abspath, join, expanduser
 import sys
+
+import subprocess
 
 from googleapiclient import discovery
 from googleapiclient import errors
@@ -23,24 +25,45 @@ import json
 from json import JSONEncoder
 from HTMLParser import HTMLParser
 from datetime import datetime
+try:
+    import argparse
+    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+except ImportError:
+    flags = None
+
+# If modifying these scopes, delete your previously saved credentials
+# at ~/.credentials/gmail-python-quickstart.json
+SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
+CLIENT_SECRET_FILE = 'client_secret.json'
+APPLICATION_NAME = 'Gmail API Python Quickstart'
+
 
 def get_credentials():
+    """Gets valid user credentials from storage.
+
+    If nothing has been stored, or if the stored credentials are invalid,
+    the OAuth2 flow is completed to obtain the new credentials.
+
+    Returns:
+        Credentials, the obtained credential.
+    """
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
-    print("checking for cached credentials")
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,'mycroft-gmail-skill.json')
+    credential_path = os.path.join(credential_dir,
+                                   'gmail-python-quickstart.json')
 
-    store = oauth2client.file.Storage(credential_path)
+    store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
-        credentials = tools.run_flow(OAuth2WebServerFlow(client_id=CID,client_secret=CIS,scope=SCOPES,user_agent=APPLICATION_NAME),store)
-        print 'Storing credentials to ' + credential_dir
-	print 'Your GMail Skill is now authenticated '
-    else:
-	print 'Loaded credentials for Gmail Skill from ' + credential_dir
-
+        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+        flow.user_agent = APPLICATION_NAME
+        if flags:
+            credentials = tools.run_flow(flow, store, flags)
+        else: # Needed only for compatibility with Python 2.6
+            credentials = tools.run(flow, store)
+        print('Storing credentials to ' + credential_path)
     return credentials
 
 def GetMessage(user_id, msg_id):
@@ -65,7 +88,12 @@ def parse_datetime_string(string):
 	string = string[:-6]
 	return datetime.strptime(string,"%a, %d %b %Y %H:%M:%S +%f")
 
-def main()
+def main():
+    
+    global time_format
+    global detail
+    detail = True
+    time_format = 12
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     global service
@@ -84,44 +112,53 @@ def main()
 
     	while 'nextPageToken' in response:
 		page_token = response['nextPageToken']
-		response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=max_results,q=query,pageToken=page_token).execute()
-   except errors.HttpError, error:
+		response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=1,q=query,pageToken=page_token).execute()
+    except errors.HttpError, error:
 	print 'An error occurred: %s' % error
  
     curMessage = messages[0]
-    while true:
+    
+    
+    while True:
 	user_id = "me"
 	label_id = ["INBOX","IMPORTANT"]
 	response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=1,q=query).execute()
-	newMail = []
-    	if 'newMail' in response:
-    		newMail.extend(response['messages'])
+	messages = []
+    	if 'messages' in response:
+    		messages.extend(response['messages'])
 
     	while 'nextPageToken' in response:
 		page_token = response['nextPageToken']
-		response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=max_results,q=query,pageToken=page_token).execute()
-	newestMail = newMail[0]
-	if  curMessage is not newestMail:
+		response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=1,q=query,pageToken=page_token).execute()
+        newestMail = messages[0]
+        cur_id = curMessage["id"]
+        new_id = newestMail["id"]
+	msg = GetMessage(user_id, cur_id)
+	cur_headers = msg["payload"]["headers"] 
+	msg = GetMessage(user_id, new_id)
+	new_headers = msg["payload"]["headers"] 
+
+        if  new_headers != cur_headers:
 		curMessage = newestMail
     		try:
 			user_id = "me"
 			label_id = ["INBOX","IMPORTANT"]
         		query = "is:unread"
 	
-			response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=10,q=query).execute()
+			response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=2,q=query).execute()
 			messages = []
 		    	if 'messages' in response:
 		    		messages.extend(response['messages'])
 
 		    	while 'nextPageToken' in response:
 				page_token = response['nextPageToken']
-				response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=max_results,q=query,pageToken=page_token).execute()
+				response = service.users().messages().list(userId=user_id,labelIds=label_id,maxResults=2,q=query,pageToken=page_token).execute()
 	   	except errors.HttpError, error:
 			print 'An error occurred: %s' % error
 	    	
-		msgs = messages[:10] 
+		msgs = messages[:1] 
 		complete_phrase = ""
-		for x in range(0,10):	
+		for x in range(0,1):	
 			msg_id = msgs[x]["id"] 
 			msg = GetMessage(user_id, msg_id)
 			msg_headers = msg["payload"]["headers"] 
@@ -155,6 +192,6 @@ def main()
 			complete_phrase = "Email from "+msg_from_sender+" received "+msg_received+", with subject, "+msg_subject
 			if detail is True:
 				complete_phrase = complete_phrase + ", Message, " + msg_txt
-
-			self.speak(complete_phrase)	
-		
+                        subprocess.call(["/bin/mimic/mimic","-t",complete_phrase])
+if __name__ == "__main__":
+    main()

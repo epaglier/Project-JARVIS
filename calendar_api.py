@@ -64,33 +64,6 @@ class Calendar_Mutator:
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
-    
-    def setEvent(self,event, location, description, ):
-        event = {
-            'summary': event,
-            'location': location,
-            'description': description,
-            'start': {
-                    'dateTime': '2017-10-05T09:00:00-07:00',
-                    'timeZone': 'America/Los_Angeles',
-            },
-            'end': {
-                    'dateTime': '2017-10-06T17:00:00-07:00',
-                    'timeZone': 'America/Los_Angeles',
-            },
-            'reminders': {
-                    'useDefault': False,
-                    'overrides': [
-                        {'method': 'email', 'minutes': 24 * 60},
-                        {'method': 'popup', 'minutes': 10},
-                    ],
-            },
-        }
-        
-        event = Calendar_Mutator.service.events().insert(calendarId='primary', body=event).execute()
-        print('Event = ', (event.get('htmlLink')))        
-        
-    def getEventsForDay(self):
         
 
 
