@@ -10,9 +10,9 @@ cache = None
 
 # Used to randomly select a joke source
 rand = random.randint(0, 2)
-
-if "curl: (6) Could not resolve host: api.yomomma.info" == \
-    subprocess.check_output(["curl", "http://api.yomomma.info/"])
+temp = subprocess.check_output(["curl", "http://api.yomomma.info/"])
+print temp
+if "curl: (6) Could not resolve host: api.yomomma.info" == temp
     if cache.len() > 0:
         joke = cache.pop(cache.len() - 1)
         subrocesss.check_output(["/bin/mimic/mimic", "-t", joke])

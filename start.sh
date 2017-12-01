@@ -10,8 +10,9 @@ start_mopidy &
 
 # Start the daemon processes in the background.
 start_daemons() {
-  python jarvis-features/daemons/gpsd.py
-  python jarvis-features/daemons/wifid.py
+  cd jarvis-features/daemons
+  python gpsd.py
+  python wifid.py
   echo "Started daemons."
 }
 
