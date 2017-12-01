@@ -1,0 +1,12 @@
+Number classification to outfit choice
+
+Format- <date>:<temp>:<percip>:<pants>:<top>\n
+
+Pants
+1 = jeans
+2 = khaki shorts
+
+Top
+1 = shirt
+2 = sweatShirt
+3 = Jacket
