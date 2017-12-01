@@ -18,6 +18,10 @@ start_daemons() {
 start_daemons &
 
 # Start mycroft-core.
-# Switch into the "core" directory so that the startup script is in the correct working directory.
-echo "Starting mycroft-core..."
-bash mycroft-core/mycroft.sh start
+start_mycroft() {
+  cd mycroft-core
+  bash mycroft.sh start -d
+  echo "Starting mycroft-core..."
+}
+
+start_mycroft
