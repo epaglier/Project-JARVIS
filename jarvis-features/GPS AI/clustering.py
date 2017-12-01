@@ -1,5 +1,6 @@
 import sys
 import math
+import datetime
 #from geopy.distance import great_circle
 
 inputTextFile = "output.txt"#sys.argv[1]
@@ -112,8 +113,28 @@ def reduce(points):
 #	plt.xlabel('Longetude')
 	#plt.axis([38, 42, -90, -85])
 #	plt.show()
-list = rankAll()
-sortedList = sortList(list)
-reduct = reduce(sortedList)
-print reduct
+def get():
+	list = rankAll()
+	sortedList = sortList(list)
+	reduct = reduce(sortedList)
+	return reduct
+
+def getWalkTime(day):
+	i = True
+	last = ""
+	totTime = 0
+	for point in pointlist:
+		if not i:
+			speed = float(point[3])
+			if speed > 1 and speed < 5:
+				time1 = datetime.datetime.strptime(last[0], '%Y-%m-%d %H:%M:%S')	
+				time2 = datetime.datetime.strptime(point[0], '%Y-%m-%d %H:%M:%S')
+				hours, remainder = divmod((time2-time1).seconds, 3600)
+				minutes, seconds = divmod(remainder, 60)
+				if time1.day == day:
+					totTime = totTime + seconds
+				
+		last = point
+		i = False
+	return totTime
 #plot(reduct)
