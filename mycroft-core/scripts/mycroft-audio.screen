@@ -1,0 +1,6 @@
+
+    # Generated
+    deflog on
+    logfile scripts/logs/mycroft-audio.log
+    logfile flush 1
+  

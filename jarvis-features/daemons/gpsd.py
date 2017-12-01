@@ -4,7 +4,6 @@ import subprocess
 import os
 
 # get a module from a different directory
-user = os.getlogin()
 sys.path.insert(0, '../gps_modules/')
 
 import gps
