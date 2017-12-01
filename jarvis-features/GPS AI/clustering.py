@@ -1,7 +1,6 @@
 import sys
 import math
 import datetime
-#from geopy.distance import great_circle
 
 inputTextFile = "output.txt"#sys.argv[1]
 distThresh = .01 #mile
@@ -119,7 +118,7 @@ def get():
 	reduct = reduce(sortedList)
 	return reduct
 
-def getWalkTime(day):
+def getWalkTime(day,month):
 	i = True
 	last = ""
 	totTime = 0
@@ -131,7 +130,26 @@ def getWalkTime(day):
 				time2 = datetime.datetime.strptime(point[0], '%Y-%m-%d %H:%M:%S')
 				hours, remainder = divmod((time2-time1).seconds, 3600)
 				minutes, seconds = divmod(remainder, 60)
-				if time1.day == day:
+				if time1.day == day and time1.month == month:
+					totTime = totTime + seconds
+				
+		last = point
+		i = False
+	return totTime
+
+def getDriveTime(day,month):
+	i = True
+	last = ""
+	totTime = 0
+	for point in pointlist:
+		if not i:
+			speed = float(point[3])
+			if speed > 5:
+				time1 = datetime.datetime.strptime(last[0], '%Y-%m-%d %H:%M:%S')	
+				time2 = datetime.datetime.strptime(point[0], '%Y-%m-%d %H:%M:%S')
+				hours, remainder = divmod((time2-time1).seconds, 3600)
+				minutes, seconds = divmod(remainder, 60)
+				if time1.day == day and time1.month == month:
 					totTime = totTime + seconds
 				
 		last = point

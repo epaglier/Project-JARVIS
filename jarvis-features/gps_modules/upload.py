@@ -15,6 +15,12 @@ def endLightCycle():
     GPIO.output(21, 0)
     GPIO.cleanup()
 
+def stopTracking():
+    track = 0
+
+def startTracking():
+    track = 1
+
 mode = 1
 timeToWait = 0
 cnx = mysql.connector.connect(user='pi', password='sudo', database='test')
