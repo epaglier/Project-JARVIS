@@ -1,8 +1,8 @@
 def respond(array):
     if "test" in array:
-        return True
+        return 1
     else:
-        return False
+        return 0
 
 def handle_input(string):
     return "Hey I am just the test script"

@@ -2,7 +2,7 @@ import speech_recognition as sr
 from gtts import gTTS
 import random
 import time
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import importlib
 import os
 
@@ -16,7 +16,7 @@ import os
 
 skillList = []
 for skill in os.listdir("ourSkillz"):
-    if skill.split(".")[1] == 'py' and not skill.split(".")[0] == "__init__":
+    if not skill.split(".")[0] == "__init__" and not skill.split(".")[0] == "__pycache__" and skill.split(".")[1] == 'py':
         skillList.append(importlib.import_module("ourSkillz." + skill[:-3]))
 print(skillList)
 # obtain audio from the microphone
@@ -34,14 +34,24 @@ try:
     userString = r.recognize_google(audio)
     userSay = userString.split(" ")
     
+    highestResponseValue = 0
+    mostFitSkill = None
+
     for skill in skillList:
-        if (skill.respond(userSay)):
-            tts = gTTS(text=skill.handle_input(userString), lang='en')
-            tts.save("good.mp3")
-            os.system("mpg321 good.mp3")
-            exit()
-    
-    print(userSay)
+        value = skill.respond(userSay)
+        if (value > highestResponseValue):
+            highestResponseValue = value
+            mostFitSkill = skill
+    if mostFitSkill != None: 
+        tts = gTTS(text=mostFitSkill.handle_input(userString), lang='en')
+        tts.save("good.mp3")
+        os.system("mpg321 good.mp3")
+        exit()
+    else:
+        tts = gTTS(text="I don't understand what you mean by " + userString, lang='en')
+        tts.save("good.mp3")
+        os.system("mpg321 good.mp3")
+        exit() 
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
 except sr.RequestError as e:
