@@ -3,19 +3,22 @@ from gtts import gTTS
 import random
 import time
 import RPi.GPIO as GPIO
+import importlib
 import os
 
 #Random welcome phrases
 #welcome = ["I'm up! What did I miss?","Hello world! How can I help you today?","Hello! Lovely day isn't it?"]
-
-welcome = ["This is a really long message that will likely cause our application to crash."]
 
 #Say welcome phrase
 #tts = gTTS(text=random.choice(welcome), lang='en')
 #tts.save("good.mp3")
 #os.system("mpg321 good.mp3")
 
-
+skillList = []
+for skill in os.listdir("ourSkillz"):
+    if skill.split(".")[1] == 'py' and not skill.split(".")[0] == "__init__":
+        skillList.append(importlib.import_module("ourSkillz." + skill[:-3]))
+print(skillList)
 # obtain audio from the microphone
 r = sr.Recognizer()
 
@@ -30,21 +33,15 @@ try:
     print("recognizing..")
     userString = r.recognize_google(audio)
     userSay = userString.split(" ")
+    
+    for skill in skillList:
+        if (skill.respond(userSay)):
+            tts = gTTS(text=skill.handle_input(userString), lang='en')
+            tts.save("good.mp3")
+            os.system("mpg321 good.mp3")
+            exit()
+    
     print(userSay)
-    if userSay[0] == 'Echo':
-        userString = ""
-        for i in range(1,len(userSay)):
-            userString = userString + userSay[i]
-            userString = userString + " "
-        tts = gTTS(text=userString, lang='en')
-        tts.save("good.mp3")
-        print userString
-            #os.system("mpg321 good.mp3")
-    else:
-        tts = gTTS(text="Sorry I don't understand what you mean by " + userString, lang='en')
-        tts.save("good.mp3")
-            #os.system("mpg321 good.mp3")
-        print userString
 except sr.UnknownValueError:
     print("Google Speech Recognition could not understand audio")
 except sr.RequestError as e:
