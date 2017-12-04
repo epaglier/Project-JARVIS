@@ -1,10 +1,3 @@
-from adapt.intent import IntentBuilder
-#from mycroft.messagebus.message import Message
-
-#from mycroft.skills.core import MycroftSkill
-#from mycroft.util.log import getLogger
-#from mycroft.util import record, play_mp3
-
 import httplib2
 import os
 from os.path import dirname, abspath, join, expanduser
@@ -25,6 +18,9 @@ import json
 from json import JSONEncoder
 from HTMLParser import HTMLParser
 from datetime import datetime
+from gtts import gTTS
+import os
+
 try:
     import argparse
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -192,6 +188,9 @@ def main():
 			complete_phrase = "Email from "+msg_from_sender+" received "+msg_received+", with subject, "+msg_subject
 			if detail is True:
 				complete_phrase = complete_phrase + ", Message, " + msg_txt
-                        subprocess.call(["/bin/mimic/mimic","-t",complete_phrase])
+                        print complete_phrase
+                        tts = gTTS(text = complete_phrase, lang = 'en')
+                        tts.save("audio.mp3")
+                        os.system("mpg321 audio.mp3")
 if __name__ == "__main__":
     main()
