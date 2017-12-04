@@ -4,6 +4,8 @@ import os
 import sys
 import subprocess
 import random
+from gtts import gTTS
+
 
 # Used as a cache when no network is available
 cache = []
@@ -15,7 +17,10 @@ temp = subprocess.check_output(["curl", "http://api.yomomma.info/"])
 if "curl: (6) Could not resolve host: api.yomomma.info" == temp:
     if len(cache) > 0:
         joke = cache.pop(len(cache) - 1)
-        subrocesss.check_output(["/bin/mimic/mimic", "-t", joke])
+        tts = gTTS(text = "joke", lang = 'en')
+        tts.save("audio.mp3")
+        os.system("mpg321 audio.mp3")
+        # subrocesss.check_output(["/bin/mimic/mimic", "-t", joke])
     else:
         # No wifi/API unavailable
         subrocesss.check_output(["/bin/mimic/mimic", "-t", "I can't make a joke now, sorry."])
