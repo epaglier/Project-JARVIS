@@ -5,7 +5,6 @@ Created on Tue Oct 31 17:40:11 2017
 
 @author: Evan
 """
-
 import os
 import time
 import cv2
@@ -26,7 +25,7 @@ def respond(array):
 def handle_input(string):
     try:
         takePicture()
-        return "Done!"
+        return "Looking snappy!"
     except:
         return "Sorry I couldn't for some reason"
 
@@ -42,9 +41,9 @@ def takePicture():
     #Actually take it
     camera_capture = get_image()
     camera.release()
-    file = "./Image_folder/" + "Demo.jpg"#raw_input("Name your file! (without extention)\n") + ".png"
+    file = "./ourSkillz/Image_folder/" + "Demo.jpg"#raw_input("Name your file! (without extention)\n") + ".png"
     cv2.imwrite(file, camera_capture)
-
+    print("here")
 
 def get_image():
     global camera
