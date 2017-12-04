@@ -2,7 +2,7 @@ import speech_recognition as sr
 from gtts import gTTS
 import random
 import time
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import importlib
 import os
 import sys
@@ -30,6 +30,9 @@ def say(string):
     tts.save("good.mp3")
     os.system("mpg321 good.mp3")
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(21, GPIO.OUT)
+GPIO.output(21, GPIO.LOW)
 
 """INITIALIZATION"""
 #Say welcome phrase
@@ -43,17 +46,21 @@ for skill in os.listdir("ourSkillz"):
     if not skill.split(".")[0] == "__init__" and not skill.split(".")[0] == "__pycache__" and len(skill.split(".")) > 1 and skill.split(".")[1] == 'py':
         skillList.append(importlib.import_module("ourSkillz." + skill[:-3]))
 #print(skillList)
-
+r = None
+if not debug:
+    r = sr.Recognizer()
+    r.adjust_for_ambient_noise(source, duration = 1)
 #Main function to record and work with input
 def main():
     if not debug:
-        if internet_on():
-            r = sr.Recognizer()
+        if internet_on(): 
             #get input message
             with sr.Microphone() as source:
                 print("say something!")
-                audio = r.listen(source,timeout = 2,phrase_time_limit = 5)
+                GPIO.output(21, GPIO.HIGH)
+                audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
             try:
+                GPIO.output(21, GPIO.LOW)
                 print("recognizing..")
                 userString = r.recognize_google(audio)
             except sr.UnknownValueError:
