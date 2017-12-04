@@ -1,15 +1,8 @@
-from adapt.intent import IntentBuilder
-#from mycroft.messagebus.message import Message
-
-#from mycroft.skills.core import MycroftSkill
-#from mycroft.util.log import getLogger
-#from mycroft.util import record, play_mp3
-
 import httplib2
 import os
 from os.path import dirname, abspath, join, expanduser
 import sys
-
+from gtts import gTTS 
 import subprocess
 
 from googleapiclient import discovery
@@ -192,6 +185,8 @@ def main():
 			complete_phrase = "Email from "+msg_from_sender+" received "+msg_received+", with subject, "+msg_subject
 			if detail is True:
 				complete_phrase = complete_phrase + ", Message, " + msg_txt
-                        subprocess.call(["/bin/mimic/mimic","-t",complete_phrase])
+                        tts = gTTS(text = complete_phrase, lang = "en")
+                        tts.save("gmail.mp3")
+                        os.system("mpg321 gmail.mp3")
 if __name__ == "__main__":
     main()
