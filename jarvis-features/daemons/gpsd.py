@@ -1,6 +1,6 @@
 import sys
 import time
-import subprocess
+from gtts import gTTS
 import os
 
 # get a module from a different directory
@@ -15,11 +15,17 @@ while(True):
     loc = gps.getLocation()
     if loc.getFix() and not signal:
         # no signal -> signal
-        subprocess.check_output(["/bin/mimic/mimic", "-t", "\"GPS signal established.\""])
+        established = "\"GPS signal established.\""
+        tts = gTTS(text = established, lang = 'en')
+        tts.save("audio.mp3")
+        os.system("mpg321 audio.mp3")
         signal = True
         print "[gpsd] GPS signal established."
     elif not loc.getFix() and signal:
         # signal -> no signal
-        subprocess.check_output(["/bin/mimic/mimic", "-t", "\"GPS signal lost.\""])
+        lost = "\"GPS signal lost.\""
+        tts = gTTS(text = lost, lang = 'en')
+        tts.save("audio.mp3")
+        os.system("mpg321 audio.mp3")
         signal = False
         print "[gpsd] GPS signal lost."

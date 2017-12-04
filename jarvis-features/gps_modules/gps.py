@@ -8,10 +8,11 @@ import urllib2
 import json
 import re
 
-
+printed_done = False
 initialized = False
 exiting = False
-print "Initializing..."
+sys.stdout.write("Initializing... ")
+sys.stdout.flush()
 
 GOOGLE_MAPS_API_KEY = "AIzaSyBMK5WI2yWUnBpnToA7FX0bKf8Lkb3RWBQ"
 
@@ -180,14 +181,19 @@ def collect():
 # every 1/10 of a second.
 def getLocation():
     global initialized
+    global printed_done
     duration = 0.1
     elapsed = 0
     threshold = 3 # Don't wait longer than 3 seconds for a fix
     while not initialized:
         if duration > threshold:
+            sys.stdout.flush()
             return location
         time.sleep(duration) # Yield CPU and poll
         elapsed += duration
+    if not printed_done:
+        sys.stdout.write("Done\n")
+        printed_done = True
     return location
 
 def exit():
