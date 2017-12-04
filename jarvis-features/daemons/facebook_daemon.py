@@ -1,6 +1,8 @@
 from facepy import GraphAPI
+from gtts import gTTS
+import os
 
-access_token = "EAACEdEose0cBAGFZBcP4ZBlktGHxwctIJh9Ab4vGHIS8NgEc5ZBmPbIsBZCZCdlp2onAkMPkbzd5Ao3YPaYZAuY5eeZCoz5KzHAnRkXpjeVArBaptXU5w2dSqBiO6ZCZBiHT84ScZAmm8n7Ay0OZC0oY3LbnCvT9NfdR54qMSYkPcQTU2OZCJyZCzWxs3FAvVQMNnLMj2ZBUhZAbCBtRQZDZD"
+access_token = "EAACEdEose0cBANBJkveuZCRgkH7S50IMAYZCdqCfDhZA3gKmxIZAABqM8DiU6V6q0d0LWSLmbJDbgLJpZAB8jdzxqDRI2AGZBAzqe5DOFdXZBpf4R8rIlZCEkHUWkPNPJteZB82pggtfAfnFsMGtfTG9IjZAo9uCBnNZCiIFVDjn51HZBqh8z0kv4BdkqVhGaG7RUAO8xW89oCpTmQZDZD"
 
 graph = GraphAPI(access_token)
 p = graph.get('me/feed')
@@ -23,4 +25,8 @@ while True:
 			currPost = post
 			result =  "Facebook post: " + s
                         print result.encode('utf-8')
-		currPost = newPost
+                        tts = gTTS(text = "You have a new facebook post! " + s, lang = 'en')
+                        tts.save("audio.mp3")
+                        os.system("mpg321 audio.mp3")
+
+                currPost = newPost

@@ -1,5 +1,7 @@
 import time
 import tweepy
+from gtts import gTTS
+import os
 
 consumer_key = "ARfkWvjcYO1YFtl01ERTgDzbv"
 consumer_secret = "aQjhoOQtx45vYu1pOSvq5p1Im1drj8kuRKtCZnzBBazovUccnX"
@@ -22,6 +24,10 @@ while True:
 				break
                         result = newestTweet.user.screen_name + " tweeted: " + newestTweet.text
                         print result.encode('utf-8')
+                        tts = gTTS(text = result, lang = 'en')
+                        tts.save("audio.mp3")
+                        os.system("mpg321 audio.mp3")
+                        
 		currTweet = newestTweet
 
 	time.sleep(71)
