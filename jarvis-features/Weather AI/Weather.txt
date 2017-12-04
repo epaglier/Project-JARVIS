@@ -1,0 +1,26 @@
+Temp(F):59.0,Humidity:100,Precipitation:heavy intensity rain
+Temp(F):58.64,Humidity:100,Precipitation:heavy intensity rain
+Temp(F):58.28,Humidity:100,Precipitation:light rain
+Temp(F):58.28,Humidity:100,Precipitation:light rain
+Temp(F):57.902,Humidity:100,Precipitation:thunderstorm with rain
+Temp(F):57.884,Humidity:100,Precipitation:thunderstorm with rain
+Temp(F):55.796,Humidity:100,Precipitation:light rain
+Temp(F):55.796,Humidity:100,Precipitation:light rain
+Temp(F):55.4,Humidity:100,Precipitation:fog
+Temp(F):55.4,Humidity:100,Precipitation:fog
+Temp(F):54.338,Humidity:100,Precipitation:mist
+Temp(F):54.338,Humidity:100,Precipitation:mist
+Temp(F):54.032,Humidity:100,Precipitation:mist
+Temp(F):54.05,Humidity:100,Precipitation:mist
+Temp(F):52.916,Humidity:100,Precipitation:mist
+Temp(F):52.916,Humidity:100,Precipitation:mist
+Temp(F):52.952,Humidity:100,Precipitation:mist
+Temp(F):52.97,Humidity:100,Precipitation:mist
+Temp(F):51.44,Humidity:100,Precipitation:mist
+Temp(F):51.44,Humidity:100,Precipitation:mist
+Temp(F):51.458,Humidity:93,Precipitation:mist
+Temp(F):51.458,Humidity:93,Precipitation:mist
+Temp(F):50.0,Humidity:93,Precipitation:overcast clouds
+Temp(F):50.0,Humidity:93,Precipitation:overcast clouds
+Temp(F):50.018,Humidity:93,Precipitation:overcast clouds
+Temp(F):50.018,Humidity:93,Precipitation:overcast clouds

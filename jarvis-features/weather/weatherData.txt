@@ -1,0 +1,9 @@
+hoodie:50
+hoodie:60
+Winter Coat:10
+T-Shirt:85
+T-Shirt:70
+Long Sleve:50
+Long Sleve:65
+Crew neck:47
+Crew neck:47

@@ -1,0 +1,6 @@
+Average walking time over 2 days
+0,11,28
+
+Locations:
+15:17	1899-1949 Sagamore Pkwy S, Lafayette, IN 47905, USA
+15:34	625-627 N University St, West Lafayette, IN 47907, USA
