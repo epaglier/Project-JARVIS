@@ -9,6 +9,9 @@ import sys
 import ourSkillz.dependencies.gps as gps
 import urllib2
 import re
+import pyttsx
+
+engine = pyttsx.init()
 
 def internet_on():
     try:
@@ -44,6 +47,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.OUT)
 GPIO.output(21, GPIO.LOW)
 
+GPIO.setup(12, GPIO.IN)
+print(GPIO.input(12))
 """INITIALIZATION"""
 #Say welcome phrase
 
@@ -65,54 +70,63 @@ else:
     print(random.choice(welcome))
 
 def main():
-    if not debug:
-        if internet_on(): 
-            #get input message
-            with sr.Microphone() as source:
-                print("say something!")
-                GPIO.output(21, GPIO.HIGH)
-                audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
-                wakeWord = ("Jarvis",0.8);
-                wakeWordArray = [wakeWord]
-                GPIO.output(21, GPIO.LOW)
-            try:
-                print("recognizing..")
-                userString = r.recognize_google(audio)
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
-            except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    else:
-        userString = raw_input("(debug) Type something:")
-    userSay = userString.split(" ")
+    if GPIO.input(12):
+        if not debug:
+            if internet_on(): 
+                #get input message
+                with sr.Microphone() as source:
+                    print("say something!")
+                    GPIO.output(21, GPIO.HIGH)
+                    audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
+                    GPIO.output(21, GPIO.LOW)
+                try:
+                    print("recognizing..")
+                    userString = r.recognize_google(audio)
+                except sr.UnknownValueError:
+                    print("Google Speech Recognition could not understand audio")
+                    say("Could you say that again? I couldnt hear you")
+                    return
+                except sr.RequestError as e:
+                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                    say("Sorry I had an error talking to google try again in a few minutes")
+                    return
+            else:
+                engine.say('Sorry for my raspy voice, I can not seem to reach my voice servers')
+                engine.runAndWait()
+        else:
+            userString = raw_input("(debug) Type something:")
+        userSay = userString.split(" ")
     
-    highestResponseValue = 0
-    mostFitSkill = None
+        highestResponseValue = 0
+        mostFitSkill = None
 
-    for skill in skillList:
-        value = skill.respond(userSay)
-        if (value > highestResponseValue):
-            highestResponseValue = value
-            mostFitSkill = skill
-    if mostFitSkill != None: 
-        print("weatherai" in mostFitSkill.__name__) #Make userstring the lat and long
-        if debug:
-            string = mostFitSkill.handle_input(userString)
-            loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
-            string = re.sub('\[loc_coords\]', repr(loc.getLatitude())+" degrees latitude, " +\
-                repr(loc.getLongitude()) + " degrees longitude", string)
-            string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
+        for skill in skillList:
+            value = skill.respond(userSay)
+            if (value > highestResponseValue):
+                highestResponseValue = value
+                mostFitSkill = skill
+        if mostFitSkill != None: 
+            print(userSay) 
+            print("janice" in userSay) #Make userstring the lat and long
+            if debug:
+                string = mostFitSkill.handle_input(userString)
+                loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+                string = re.sub('\[loc_coords\]', repr(loc.getLatitude())+" degrees latitude, " +\
+                    repr(loc.getLongitude()) + " degrees longitude", string)
+                string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
 
-            print(string)
+                print(string)
+            else:
+                print(mostFitSkill.handle_input(userString))
+                say(mostFitSkill.handle_input(userString))
         else:
-            say(mostFitSkill.handle_input(userString))
-    else:
-        if "exit" in userSay:
-            print("see you later sir!")
-            exit()
-        if debug:
-            print("I don't understand what you mean by " + userString)
-        else:
-            say("I don't understand what you mean by " + userString)
+            if "exit" in userSay:
+                print("see you later sir!")
+                exit()
+            if debug:
+                print("I don't understand what you mean by " + userString)
+            else:
+                say("I don't understand what you mean by " + userString)
 while True:
     main()
+    time.sleep(.1)
