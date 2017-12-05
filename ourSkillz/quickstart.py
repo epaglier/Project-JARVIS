@@ -17,14 +17,26 @@ def handle_input(string):
         summaryIndex = arr.index("summary")
         descIndex = arr.index("description")
         
+        at = ""
+        i = atIndex + 1
+        while i < summaryIndex:
+            at = at + arr[i] + " "
+            i = i + 1
+    
+        print "At: " + at
+        
         summary = ""
         i = summaryIndex + 1
         while i < descIndex:
             summary = summary + arr[i] + " "
             i = i + 1
         
+        print "Summary: " + summary
+        
         description = ""
         i = descIndex + 1
         while i < (len(arr)-1):
             description = description + arr[i] + " "
-
+            
+        print "Description: " + description
+        
