@@ -1,4 +1,5 @@
 from fbrecog import FBRecog
+from math import trunc
 
 invoke_words = ["who","was","that","recognize","picture"]
 
@@ -19,8 +20,10 @@ def recognize():
 
     recog = FBRecog(access_token, cookies, fb_dtsg)
     temp = recog.recognize("/Users/Evan/Documents/GitHub/Project-JARVIS/JARVIS-CORE/ourSkillz/Image_folder/Demo.jpg")#'simplecv' + str(num) + ".png")
-    return temp
+    return temp[0]
 
 def handle_input(string):
-	recognize()
+    arr = recognize()
+    return "I am " + str(trunc(float(arr['certainity']*100))) + " percent sure that was " + arr['name']
 
+print(handle_input("hi"))
