@@ -1,6 +1,0 @@
-
-    # Generated
-    deflog on
-    logfile scripts/logs/mycroft-skills.log
-    logfile flush 1
-  
