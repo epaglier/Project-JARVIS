@@ -104,33 +104,40 @@ def getNextEvent():
     events = eventsResult.get('items', [])
 
     if not events:
-        print('No upcoming events found.')
+        return 'No upcoming events found.'
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+        startArr = start.split("T")
+        hourOfE = startArr[1]
+        hourOfEArr = hourOfE.split(":")
+        resHour = hourOfEArr[0]
+        return ("Next Appointment is at " + resHour + " hundred hours. The appointment is " + event['summary'] + " where " + event['description'])
 
-def createEvent():
+def createEvent(summary, description, time):
     	credentials = get_credentials()
     	http = credentials.authorize(httplib2.Http())
     	service = discovery.build('calendar', 'v3', http=http)
-	
+	timeEnd = time + 1
 	event = {
-		'summary': 'summary',
-		'description': 'description',
+		'summary': summary,
+		'description': description,
 		'start': {
-			'dateTime': '2017-12-05T23:00:00-05:00',
+			'dateTime': '2017-12-06T' + str(time) + ':00:00-05:00',
 			'timeZone': 'America/Indianapolis',
 		},
   		'end': {
-    			'dateTime': '2017-12-05T23:30:00-05:00',
+    			'dateTime': '2017-12-06T' + str(timeEnd) + ':00:00-05:00',
     			'timeZone': 'America/Indianapolis',
   		},
 	}
 	created_event = service.events().insert(calendarId='primary', body=event).execute()
 
 def main():
-	getNextEvent()
-	createEvent()	
+	print(getNextEvent())
+	summary = 'something'
+        description = 'another thing'
+        time = 18
+        createEvent(summary, description, time)	
 
 if __name__ == '__main__':
     main()
