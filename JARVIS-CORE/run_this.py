@@ -33,6 +33,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.OUT)
 GPIO.output(21, GPIO.LOW)
 
+GPIO.setup(12, GPIO.IN)
+print(GPIO.input(12))
 """INITIALIZATION"""
 #Say welcome phrase
 
@@ -54,48 +56,51 @@ else:
     print(random.choice(welcome))
 
 def main():
-    if not debug:
-        if internet_on(): 
-            #get input message
-            with sr.Microphone() as source:
-                print("say something!")
-                GPIO.output(21, GPIO.HIGH)
-                audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
-                wakeWord = ("Jarvis",0.8);
-                wakeWordArray = [wakeWord]
-                GPIO.output(21, GPIO.LOW)
-            try:
-                print("recognizing..")
-                userString = r.recognize_google(audio)
-            except sr.UnknownValueError:
-                print("Google Speech Recognition could not understand audio")
-            except sr.RequestError as e:
-                print("Could not request results from Google Speech Recognition service; {0}".format(e))
-    else:
-        userString = raw_input("(debug) Type something:")
-    userSay = userString.split(" ")
+    if GPIO.input(12):
+        if not debug:
+            if internet_on(): 
+                #get input message
+                with sr.Microphone() as source:
+                    print("say something!")
+                    GPIO.output(21, GPIO.HIGH)
+                    audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
+                    GPIO.output(21, GPIO.LOW)
+                try:
+                    print("recognizing..")
+                    userString = r.recognize_google(audio)
+                except sr.UnknownValueError:
+                    print("Google Speech Recognition could not understand audio")
+                except sr.RequestError as e:
+                    print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                
+        else:
+            userString = raw_input("(debug) Type something:")
+        userSay = userString.split(" ")
     
-    highestResponseValue = 0
-    mostFitSkill = None
+        highestResponseValue = 0
+        mostFitSkill = None
 
-    for skill in skillList:
-        value = skill.respond(userSay)
-        if (value > highestResponseValue):
-            highestResponseValue = value
-            mostFitSkill = skill
-    if mostFitSkill != None: 
-        print("weatherai" in mostFitSkill.__name__) #Make userstring the lat and long
-        if debug:
-            print(mostFitSkill.handle_input(userString))
+        for skill in skillList:
+            value = skill.respond(userSay)
+            if (value > highestResponseValue):
+                highestResponseValue = value
+                mostFitSkill = skill
+        if mostFitSkill != None: 
+            print(userSay) 
+            print("janice" in userSay) #Make userstring the lat and long
+            if debug:
+                print(mostFitSkill.handle_input(userString))
+            else:
+                print(mostFitSkill.handle_input(userString))
+                say(mostFitSkill.handle_input(userString))
         else:
-            say(mostFitSkill.handle_input(userString))
-    else:
-        if "exit" in userSay:
-            print("see you later sir!")
-            exit()
-        if debug:
-            print("I don't understand what you mean by " + userString)
-        else:
-            say("I don't understand what you mean by " + userString)
+            if "exit" in userSay:
+                print("see you later sir!")
+                exit()
+            if debug:
+                print("I don't understand what you mean by " + userString)
+            else:
+                say("I don't understand what you mean by " + userString)
 while True:
     main()
+    time.sleep(.1)
