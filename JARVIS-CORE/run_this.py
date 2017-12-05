@@ -8,6 +8,9 @@ import os
 import sys
 import ourSkillz.dependencies.gps as gps
 import urllib2
+import pyttsx
+
+engine = pyttsx.init()
 
 def internet_on():
     try:
@@ -70,9 +73,15 @@ def main():
                     userString = r.recognize_google(audio)
                 except sr.UnknownValueError:
                     print("Google Speech Recognition could not understand audio")
+                    say("Could you say that again? I couldnt hear you")
+                    return
                 except sr.RequestError as e:
                     print("Could not request results from Google Speech Recognition service; {0}".format(e))
-                
+                    say("Sorry I had an error talking to google try again in a few minutes")
+                    return
+            else:
+                engine.say('Sorry for my raspy voice, I can not seem to reach my voice servers')
+                engine.runAndWait()
         else:
             userString = raw_input("(debug) Type something:")
         userSay = userString.split(" ")
