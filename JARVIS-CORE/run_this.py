@@ -29,11 +29,13 @@ if len(sys.argv) == 2 and sys.argv[1] == "1":
     debug = 1
 
 def say(string):
-    #loc = gps.getLocation()
+    if string == "":
+        return
     try:
+        #loc = gps.getLocation()
         loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
         string = re.sub('\[loc_coords\]', re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees latitude, " +\
-            re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees longitude", string)
+            re.sub('\.', " point ", repr(loc.getLongitude())) + " degrees longitude", string)
         string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
         tts = gTTS(text=string, lang='en')
         tts.save("good.mp3")
@@ -77,7 +79,7 @@ def main():
                 with sr.Microphone() as source:
                     print("say something!")
                     GPIO.output(21, GPIO.HIGH)
-                    audio = r.listen(source,timeout = 2,phrase_time_limit = 2)
+                    audio = r.listen(source)
                     GPIO.output(21, GPIO.LOW)
                 try:
                     print("recognizing..")
@@ -117,7 +119,13 @@ def main():
 
                 print(string)
             else:
-                print(mostFitSkill.handle_input(userString))
+                string = mostFitSkill.handle_input(userString)
+                loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+                string = re.sub('\[loc_coords\]', repr(loc.getLatitude())+" degrees latitude, " +\
+                    repr(loc.getLongitude()) + " degrees longitude", string)
+                string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
+
+                print(string)
                 say(mostFitSkill.handle_input(userString))
         else:
             if "exit" in userSay:
