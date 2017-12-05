@@ -9,7 +9,12 @@ _music_targets = ["song", "track", "album", "artist", "playlist"]
 _music_vocabulary = _music_targets + ["play", "stop", "pause", "resume", "shuffle", "by", "music", "spotify", "google"]
 
 
+def __lowercase_words__(voice_words):
+    return [word.lower() for word in voice_words]
+
+
 def respond(voice_words):
+    voice_words = __lowercase_words__(voice_words)
     match_strength = 0
     for word in voice_words:
         if word == "music":
@@ -21,7 +26,7 @@ def respond(voice_words):
 
 def handle_input(voice_string):
     global _current_service
-    voice_words = voice_string.split(" ")
+    voice_words = __lowercase_words__(voice_string.split(" "))
     word_count = len(voice_words)
     if word_count >= 1:
         first_word = voice_words[0]
@@ -29,11 +34,15 @@ def handle_input(voice_string):
             if first_word == "play" or first_word == "stream":
                 music_target = None
                 shuffle = False
+
                 artist_specified = False
                 artist_words = []
                 query_words = []
                 for word in voice_words[1:]:
-                    if word in _music_targets:
+                    if word == "artist":
+                        music_target = "artist"
+                        artist_specified = True
+                    elif word in _music_targets:
                         music_target = word
                     elif word == "spotify":
                         if _current_service != _spotify:
@@ -56,7 +65,7 @@ def handle_input(voice_string):
                 if music_target == "album":
                     _current_service.play_album(query, artist, shuffle)
                 elif music_target == "artist":
-                    _current_service.play_artist(query)
+                    _current_service.play_artist(artist)
                 elif music_target == "playlist":
                     _current_service.play_playlist(query, shuffle)
                 else:
