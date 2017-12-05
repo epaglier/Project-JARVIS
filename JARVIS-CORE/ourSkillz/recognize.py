@@ -19,11 +19,10 @@ def recognize():
     fb_dtsg = 'AQEYoBOWHQEQ:AQFonwFL5ZkC'
 
     recog = FBRecog(access_token, cookies, fb_dtsg)
-    temp = recog.recognize("/Users/Evan/Documents/GitHub/Project-JARVIS/JARVIS-CORE/ourSkillz/Image_folder/Demo.jpg")#'simplecv' + str(num) + ".png")
+    temp = recog.recognize("/home/evan/Project-JARVIS/JARVIS-CORE/ourSkillz/Image_folder/Demo.jpg")#'simplecv' + str(num) + ".png")
     return temp[0]
 
 def handle_input(string):
     arr = recognize()
     return "I am " + str(trunc(float(arr['certainity']*100))) + " percent sure that was " + arr['name']
 
-print(handle_input("hi"))
