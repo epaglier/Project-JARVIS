@@ -49,7 +49,6 @@ def get_image():
     global camera
     retval, im = camera.read()
     return im
-
 def leave():
     global camera
     camera.release
