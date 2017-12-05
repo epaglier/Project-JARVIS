@@ -34,7 +34,6 @@ def handle_input(voice_string):
             if first_word == "play" or first_word == "stream":
                 music_target = None
                 shuffle = False
-
                 artist_specified = False
                 artist_words = []
                 query_words = []
