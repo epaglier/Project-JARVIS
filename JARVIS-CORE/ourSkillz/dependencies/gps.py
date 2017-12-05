@@ -24,10 +24,9 @@ class Location:
     def __init__(self, _fix, _longitude, _latitude, _velocity):
         self.formatted_address = "Address unavailable"
         if _fix:
-            maps_query = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + repr(_latitude) +"," + repr(_longitude) + "&key=" + GOOGLE_MAPS_API_KEY
+            maps_query = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + repr(_longitude) +"," + repr(_latitude) + "&key=" + GOOGLE_MAPS_API_KEY
             response = urllib2.urlopen(maps_query).read()
             parsed_data = json.loads(response)
-            print parsed_data
             self.formatted_address = parsed_data['results'][0]['formatted_address']
 
         self.fix = _fix
@@ -84,14 +83,14 @@ class Location:
     # Will return None if no satelite lock
     def getLongitude(self):
         if self.getFix():
-            return self.longitude
+            return self.latitude
         return None
 
     # Returns latitude as a float
     # Will return None if no satelite lock
     def getLatitude(self):
         if self.getFix():
-            return self.latitude
+            return self.longitude
         return None
 
     # Returns velocity in m/s as a float

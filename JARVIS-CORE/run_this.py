@@ -8,6 +8,7 @@ import os
 import sys
 import ourSkillz.dependencies.gps as gps
 import urllib2
+import re
 
 def internet_on():
     try:
@@ -25,10 +26,20 @@ if len(sys.argv) == 2 and sys.argv[1] == "1":
     debug = 1
 
 def say(string):
-    tts = gTTS(text=string, lang='en')
-    tts.save("good.mp3")
-    os.system("mpg321 good.mp3")
-
+    #loc = gps.getLocation()
+    try:
+        loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+        string = re.sub('\[loc_coords\]', re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees latitude, " +\
+            re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees longitude", string)
+        string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
+        tts = gTTS(text=string, lang='en')
+        tts.save("good.mp3")
+        os.system("mpg321 good.mp3")
+    except Exception:
+        tts = gTTS(text=string, lang='en')
+        tts.save("good.mp3")
+        os.system("mpg321 good.mp3")
+    
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(21, GPIO.OUT)
 GPIO.output(21, GPIO.LOW)
@@ -86,7 +97,13 @@ def main():
     if mostFitSkill != None: 
         print("weatherai" in mostFitSkill.__name__) #Make userstring the lat and long
         if debug:
-            print(mostFitSkill.handle_input(userString))
+            string = mostFitSkill.handle_input(userString)
+            loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+            string = re.sub('\[loc_coords\]', repr(loc.getLatitude())+" degrees latitude, " +\
+                repr(loc.getLongitude()) + " degrees longitude", string)
+            string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
+
+            print(string)
         else:
             say(mostFitSkill.handle_input(userString))
     else:
