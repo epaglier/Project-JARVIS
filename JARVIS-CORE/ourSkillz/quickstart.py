@@ -99,7 +99,6 @@ def respond(array):
 def handle_input(string):
     
     if "retrieve" in string:
-        print("recognized retrieve")
         return getNextEvent()
    
     if "create" in string:
