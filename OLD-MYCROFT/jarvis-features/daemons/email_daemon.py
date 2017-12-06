@@ -185,6 +185,7 @@ def main():
 			complete_phrase = "Email from "+msg_from_sender+" received "+msg_received+", with subject, "+msg_subject
 			if detail is True:
 				complete_phrase = complete_phrase + ", Message, " + msg_txt
+                        print(complete_phrase)
                         tts = gTTS(text = complete_phrase, lang = "en")
                         tts.save("gmail.mp3")
                         os.system("mpg321 gmail.mp3")

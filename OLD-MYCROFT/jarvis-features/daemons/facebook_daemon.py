@@ -1,7 +1,9 @@
 from facepy import GraphAPI
 
-access_token = "EAACEdEose0cBAGFZBcP4ZBlktGHxwctIJh9Ab4vGHIS8NgEc5ZBmPbIsBZCZCdlp2onAkMPkbzd5Ao3YPaYZAuY5eeZCoz5KzHAnRkXpjeVArBaptXU5w2dSqBiO6ZCZBiHT84ScZAmm8n7Ay0OZC0oY3LbnCvT9NfdR54qMSYkPcQTU2OZCJyZCzWxs3FAvVQMNnLMj2ZBUhZAbCBtRQZDZD"
-
+import os
+from gtts import gTTS 
+import subprocess
+access_token = "EAACEdEose0cBAKrxWuHduuKpuKBSUWiZBJZB8ZBbTDye5oFhsEwi2cWdggTqcQNi6itWepizTPrihXlrrTvA1xELGgNZCWjV5JjceZCZCxZBBQrzENHjI9E57yXjDuM5GNey8GDpFnTRsZB5u6vuVhyFvTgd8x7joIB0o9WI2QUo5r0BCjrWT3Dzf1ZB0l5BAaMHndjiDUolm5AZDZD"
 graph = GraphAPI(access_token)
 p = graph.get('me/feed')
 currPost = p['data'][0]

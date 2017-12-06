@@ -1,5 +1,8 @@
 import time
 import tweepy
+import os
+from gtts import gTTS 
+import subprocess
 
 consumer_key = "ARfkWvjcYO1YFtl01ERTgDzbv"
 consumer_secret = "aQjhoOQtx45vYu1pOSvq5p1Im1drj8kuRKtCZnzBBazovUccnX"
