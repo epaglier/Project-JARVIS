@@ -8,6 +8,8 @@ import RPi.GPIO as GPIO
 import speech_recognition as sr
 import vlc
 from gtts import gTTS
+import ourSkillz.dependencies.gps as gps
+import re
 
 _SOUND_PIN = 12
 _LIGHT_PIN = 21
@@ -40,6 +42,16 @@ welcome = ["I'm up! What did I miss?",
 def say(string):
     if string == "":
         return
+
+    #loc = gps.getLocation()
+    loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+    string = re.sub('\[loc_coords\]', re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees latitude, " +\
+    re.sub('\.', " point ", repr(loc.getLongitude())) + " degrees longitude", string)
+    string = re.sub('\[loc_address\]', loc.getFormattedAddress(), string)
+    if "[length_time]" in string:
+        destination = string.split(" ").pop()
+        print "destination: " + destination
+        re.sub('\[length_time\]', loc.getDistTo(destination, "driving"), string)
     try:
         gTTS(string).save("spoken_text.mp3")
         vlc.MediaPlayer("spoken_text.mp3").play()
@@ -108,6 +120,11 @@ def main():
             except Exception as e:
                 print("Could not handle input: " + e.message)
                 return
+            #loc = gps.getLocation()
+            loc = gps.Location(1, 40.426821, -86.916308, 0.000012)
+            result = re.sub('\[loc_coords\]', re.sub('\.', " point ", repr(loc.getLatitude())) + " degrees latitude, " +\
+            re.sub('\.', " point ", repr(loc.getLongitude())) + " degrees longitude", result)
+            result = re.sub('\[loc_address\]', loc.getFormattedAddress(), result)
             print("Skill result: " + result)
             say(result)
         else:

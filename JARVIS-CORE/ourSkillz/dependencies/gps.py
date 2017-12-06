@@ -51,8 +51,8 @@ class Location:
         request = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&mode=" + _mode + "&origins=" + repr(self.latitude) + "," + repr(self.longitude) + "&destinations=" + _destination + "&key=" + GOOGLE_MAPS_API_KEY
         response = urllib2.urlopen(request).read()
         parsed_data = json.loads(response)
-        return parsed_data['rows'][0]['elements'][0]['distance']['value']/1000.0
-    
+        return parsed_data['rows'][0]['elements'][0]['distance']['text']
+
     # Returns the directions to a destination from the current location
     # _mode accepts "driving", "walking", "bicycling"
     # Note: _destination is NOT sanitized so don't f*ck it up

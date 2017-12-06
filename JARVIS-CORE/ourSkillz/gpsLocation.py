@@ -1,7 +1,7 @@
 import sys
 import os
 
-respond_to = ["where", "am", "I", "current", "location"]
+respond_to = ["where", "am", "I", "how", "far", "away", "current", "location"]
 
 def respond(array):
     count = 0
