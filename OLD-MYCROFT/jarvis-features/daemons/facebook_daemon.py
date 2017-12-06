@@ -22,5 +22,7 @@ while True:
 				s= s+ " " + post['message']
 			currPost = post
 			result =  "Facebook post: " + s
-                        print result.encode('utf-8')
+                        tts = gTTS(text = result, lang = "en")
+                        tts.save("facebook.mp3")
+                        os.system("mpg321 facebook.mp3")
 		currPost = newPost
