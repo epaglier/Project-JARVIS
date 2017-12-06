@@ -69,7 +69,7 @@ def getNextEvent():
         hourOfE = startArr[1]
         hourOfEArr = hourOfE.split(":")
         resHour = hourOfEArr[0]
-        return ("Next Appointment is at " + resHour + " hundred hours. The appointment is " + event['summary'] + " where " + event['description'])
+        return ("Next Appointment is at " + resHour + " hundred hours. The appointment is " + event['summary'] + "  .Description " + event['description'])
 
 def createEvent(summary, description, time):
     	credentials = get_credentials()
@@ -99,6 +99,7 @@ def respond(array):
 def handle_input(string):
     
     if "retrieve" in string:
+        print("recognized retrieve")
         return getNextEvent()
    
     if "create" in string:
