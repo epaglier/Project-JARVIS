@@ -95,12 +95,19 @@ def main():
         maximum_match_strength = 0
         best_skill_match = None
         for skill in imported_skills:
-            match_strength = skill.respond(spoken_words)
+            try:
+                match_strength = skill.respond(spoken_words)
+            except Exception as e:
+                print("Could not match a skill: " + e.message)
             if match_strength > maximum_match_strength:
                 maximum_match_strength = match_strength
                 best_skill_match = skill
         if best_skill_match is not None:
-            result = best_skill_match.handle_input(spoken_text)
+            try:
+                result = best_skill_match.handle_input(spoken_text)
+            except Exception as e:
+                print("Could not handle input: " + e.message)
+                return
             print("Skill result: " + result)
             say(result)
         else:
