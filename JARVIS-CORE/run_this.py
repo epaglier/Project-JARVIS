@@ -74,7 +74,7 @@ def main():
                     audio = speech_recognition.listen(input_source, timeout=5, phrase_time_limit=5)
                     GPIO.output(_LIGHT_PIN, GPIO.LOW)
                 try:
-                    print("Recognizing speech..")
+                    print("Recognizing speech...")
                     spoken_text = speech_recognition.recognize_google(audio)
                 except sr.UnknownValueError:
                     print("Could not understand speech.")
