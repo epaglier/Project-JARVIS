@@ -98,7 +98,7 @@ def respond(array):
 
 def handle_input(string):
     
-    if "get" in string:
+    if "retrieve" in string:
         return getNextEvent()
    
     if "create" in string:
@@ -134,3 +134,4 @@ def handle_input(string):
          
         createEvent(summary, description, time)
         return "created event"
+    return "specify retrieve or get for your appointment"
